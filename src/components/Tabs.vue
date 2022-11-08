@@ -1,0 +1,16 @@
+<template>
+    <div>
+        <v-tabs>
+            <v-tab to="/active">Active</v-tab>
+            <v-tab to="/archived">Done</v-tab>
+        </v-tabs>
+        <router-view></router-view>
+    </div>
+</template>
+
+<script lang="ts">
+import { defineComponent } from 'vue'
+
+export default defineComponent({
+
+})
