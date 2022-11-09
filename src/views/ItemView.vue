@@ -1,6 +1,6 @@
 <template>
-    <div>
-        <ItemComponent v-for="item of items" v-bind:key="item"></ItemComponent>
+    <div class="container">
+        <ItemComponent v-for="item in items" v-bind:key="item" :item="item"></ItemComponent>
     </div>
 </template>
 
@@ -10,22 +10,40 @@ import { Item } from '@/models/Item'
 import { ItemStatusEnum } from '@/models/ItemStatusEnum'
 import ItemComponent from '@/components/Item.vue'
 
-const items: Item[] = [
-    {
-        description: "Test description 1",
-        createdAt: new Date(),
-        status: ItemStatusEnum.Active,
-        isArchived: false
-    },
-    {
-        description: "Test description 2",
-        createdAt: new Date(),
-        status: ItemStatusEnum.Active,
-        isArchived: false
-    }
-]
-
 export default defineComponent({
-  components: { ItemComponent },
+    components: { ItemComponent },
+     data() {
+        return {
+            items: [
+                {
+                    description: "Test description 1",
+                    createdAt: new Date(),
+                    status: ItemStatusEnum.Active,
+                    isArchived: false
+                },
+                {
+                    description: "2",
+                    createdAt: new Date(),
+                    status: ItemStatusEnum.Active,
+                    isArchived: false
+                },
+                {
+                    description: "Test 3",
+                    createdAt: new Date(),
+                    status: ItemStatusEnum.Active,
+                    isArchived: false
+                }
+            ]
+        }
+    }
 })
 </script>
+<style scoped lang="scss">
+.container{
+    padding: 10px;
+    display: flex;
+    justify-content: center;
+    flex-shrink: 1;
+    gap: 10px;
+}
+</style>
