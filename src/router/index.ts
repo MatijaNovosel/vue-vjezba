@@ -1,21 +1,20 @@
-import Vue from 'vue'
-import VueRouter, { RouteConfig } from 'vue-router'
-import ItemView from '@/views/ItemView.vue'
+import Vue from "vue";
+import VueRouter, { RouteConfig } from "vue-router";
+import ItemView from "@/views/ItemView.vue";
 
-Vue.use(VueRouter)
+Vue.use(VueRouter);
 
-const routes: Array<RouteConfig> = [
-  {path: '/', redirect: "/active"},
-  {path: "/active", name: "Active", component: ItemView},
-  {path: "/done", name: "Done", component: ItemView},
-  {path: "/archived", name: "Archived", component: ItemView}
-
-]
+const routes: RouteConfig[] = [
+  { path: "/", redirect: "/active" },
+  { path: "/active", name: "Active", component: ItemView },
+  { path: "/done", name: "Done", component: ItemView },
+  { path: "/archived", name: "Archived", component: ItemView }
+];
 
 const router = new VueRouter({
-  mode: 'history',
+  mode: "history",
   base: process.env.BASE_URL,
   routes
-})
+});
 
-export default router
+export { router };

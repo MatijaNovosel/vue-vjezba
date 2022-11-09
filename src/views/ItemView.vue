@@ -1,32 +1,33 @@
 <template>
   <div class="container">
-    <ItemComponent
-      v-for="(item, i) in items"
-      :key="i"
-      :item="item"
-    ></ItemComponent>
+    <ItemComponent v-for="(item, i) in items" :key="i" :item="item" />
   </div>
 </template>
 
 <script lang="ts">
-import { computed, defineComponent, onMounted, SetupContext, watch } from "vue";
+import { defineComponent, watch } from "vue";
 import ItemComponent from "@/components/Item.vue";
-import { TodoStore } from "@/store/index";
-import { useRoute } from "vue-router/types/composables";
+import useRoute from "@/composables/useRoute";
 
 export default defineComponent({
   components: { ItemComponent },
-  setup(props, context: SetupContext) {
-    const store = TodoStore();
+  setup() {
+    const { route } = useRoute();
 
-    onMounted(() => {
-        console.log(context);
-    });
+    watch(
+      () => route.value,
+      (val) => {
+        console.log(val);
+      },
+      {
+        immediate: true // ili koristi watchEffect (https://www.vuemastery.com/blog/vues-watch-vs-watcheffect-which-should-i-use/)
+      }
+    );
 
     return {
-      items: [],
+      items: []
     };
-  },
+  }
 });
 </script>
 <style scoped lang="scss">
