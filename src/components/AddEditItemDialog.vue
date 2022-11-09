@@ -1,0 +1,93 @@
+<template>
+  <div class="text-center">
+    <v-dialog
+      v-model="dialog"
+      width="500"
+    >
+      <v-card>
+        <v-card-title class="text-h5 grey lighten-2">
+          Privacy Policy
+        </v-card-title>
+
+        <v-card-text>
+          Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+        </v-card-text>
+
+        <v-divider></v-divider>
+
+        <v-card-actions>
+          <v-spacer></v-spacer>
+          <v-btn
+            color="primary"
+            text
+            @click="dialog = false"
+          >
+            I accept
+          </v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
+  </div>
+</template>
+
+<script lang="ts">
+import { defineComponent, reactive, SetupContext, watch } from 'vue'
+
+interface State {
+  title?: string | null;
+  text?: string | null;
+  open?: boolean | null;
+}
+
+export default defineComponent({
+    props: {
+        title: { type: String, required: true },
+        text: {
+        type: String,
+        default: ""
+        },
+        open: { type: Boolean, required: true }
+    },
+     setup(props, context: SetupContext) {
+        const state: State = reactive({
+            title: props.title,
+            text: props.text,
+            open: props.open
+        });
+
+    watch(
+      () => props.text,
+      val => (state.text = val)
+    );
+
+    watch(
+      () => props.title,
+      val => (state.title = val)
+    );
+
+    watch(
+      () => props.open,
+      val => (state.open = val)
+    );
+
+    function yes() {
+      context.emit("yes");
+    }
+
+    function no() {
+      context.emit("no");
+    }
+
+    function closeDialog() {
+      state.open = false;
+      context.emit("update:open", state.open);
+    }
+
+    return {
+      state,
+      yes,
+      no,
+      closeDialog
+    };
+  }
+})

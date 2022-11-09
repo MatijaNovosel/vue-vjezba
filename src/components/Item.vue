@@ -3,7 +3,7 @@
         <div class="container">
             <div class="left">
                 <v-card-title>
-                    <span class="headline font-weight-bold">{{item.description}}</span>
+                    <span class="headline font-weight-bold" :class="{ 'doneTitle' : item.status === status.Done}">{{item.description}}</span>
                 </v-card-title>
                 <v-card-text class="font-weight-light">
                     {{item.createdAt}}
@@ -22,6 +22,7 @@
 <script lang="ts">
 import { Item } from '@/models/Item'
 import { defineComponent, PropType } from 'vue'
+import { ItemStatusEnum } from '@/models/ItemStatusEnum'
 
 export default defineComponent({
     props: {
@@ -30,7 +31,13 @@ export default defineComponent({
             required: true,
             default: {}
         }
-    }
+    },
+    setup(){
+        const status = ItemStatusEnum
+        return{
+            status
+        }
+    },
 })
 </script>
 
@@ -46,5 +53,8 @@ export default defineComponent({
 }
 .right{
     display: flex;
+}
+.doneTitle{
+    text-decoration: line-through;
 }
 </style>

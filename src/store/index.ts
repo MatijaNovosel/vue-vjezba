@@ -1,6 +1,7 @@
 import { ItemStatusEnum } from './../models/ItemStatusEnum';
 import { Item } from '@/models/Item'
 import { defineStore } from 'pinia'
+import { computed } from 'vue';
 
 export const TodoStore = defineStore('todo', () => {
   
@@ -14,7 +15,7 @@ export const TodoStore = defineStore('todo', () => {
       {
           description: "2",
           createdAt: new Date(),
-          status: ItemStatusEnum.Active,
+          status: ItemStatusEnum.Done,
           isArchived: false
       },
       {
@@ -25,22 +26,17 @@ export const TodoStore = defineStore('todo', () => {
       }
   ]
 
-  function getActiveItems(route: string){
-    switch(route){
-      case("/active"):
-        return items.filter((x) => {
-          return x.status === ItemStatusEnum.Active && !x.isArchived
-        })
-      case("/done"):
-        return items.filter((x) => {
-          return x.status === ItemStatusEnum.Done && !x.isArchived
-        })
-      case("/archived"):
-        return items.filter((x) => {
-          return x.isArchived
-        })
-    }
-  }
+  const activeItems = computed(() => items.filter((x) => {
+      return x.status === ItemStatusEnum.Active && !x.isArchived
+  }))
 
-  return { items, getActiveItems}
+  const doneItems = computed(() => items.filter((x) => {
+    return x.status === ItemStatusEnum.Done && !x.isArchived
+  }))
+
+  const archivedItems = computed(() => items.filter((x) => {
+    return x.isArchived
+  }))
+
+  return { items, activeItems, doneItems, archivedItems}
 })
