@@ -1,49 +1,40 @@
 <template>
-    <div class="container">
-        <ItemComponent v-for="item in items" v-bind:key="item" :item="item"></ItemComponent>
-    </div>
+  <div class="container">
+    <ItemComponent
+      v-for="(item, i) in items"
+      :key="i"
+      :item="item"
+    ></ItemComponent>
+  </div>
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue'
-import { Item } from '@/models/Item'
-import { ItemStatusEnum } from '@/models/ItemStatusEnum'
-import ItemComponent from '@/components/Item.vue'
+import { computed, defineComponent, onMounted, SetupContext, watch } from "vue";
+import ItemComponent from "@/components/Item.vue";
+import { TodoStore } from "@/store/index";
+import { useRoute } from "vue-router/types/composables";
 
 export default defineComponent({
-    components: { ItemComponent },
-     data() {
-        return {
-            items: [
-                {
-                    description: "Test description 1",
-                    createdAt: new Date(),
-                    status: ItemStatusEnum.Active,
-                    isArchived: false
-                },
-                {
-                    description: "2",
-                    createdAt: new Date(),
-                    status: ItemStatusEnum.Active,
-                    isArchived: false
-                },
-                {
-                    description: "Test 3",
-                    createdAt: new Date(),
-                    status: ItemStatusEnum.Active,
-                    isArchived: false
-                }
-            ]
-        }
-    }
-})
+  components: { ItemComponent },
+  setup(props, context: SetupContext) {
+    const store = TodoStore();
+
+    onMounted(() => {
+        console.log(context);
+    });
+
+    return {
+      items: [],
+    };
+  },
+});
 </script>
 <style scoped lang="scss">
-.container{
-    padding: 10px;
-    display: flex;
-    justify-content: center;
-    flex-shrink: 1;
-    gap: 10px;
+.container {
+  padding: 10px;
+  display: flex;
+  justify-content: center;
+  flex-shrink: 1;
+  gap: 10px;
 }
 </style>

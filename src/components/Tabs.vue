@@ -2,7 +2,7 @@
     <div>
         <v-tabs>
             <v-tab to="/active">Active</v-tab>
-            <v-tab to="/archived">Done</v-tab>
+            <v-tab to="/done">Done</v-tab>
         </v-tabs>
         <router-view></router-view>
     </div>

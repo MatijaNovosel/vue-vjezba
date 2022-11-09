@@ -21,11 +21,15 @@
 
 <script lang="ts">
 import { Item } from '@/models/Item'
-import { defineComponent } from 'vue'
+import { defineComponent, PropType } from 'vue'
 
 export default defineComponent({
     props: {
-        item: Object as () => Item,
+        item: {
+            type: Object as PropType<Item>,
+            required: true,
+            default: {}
+        }
     }
 })
 </script>

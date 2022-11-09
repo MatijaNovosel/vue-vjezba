@@ -1,17 +1,46 @@
-import Vue from 'vue'
-import Vuex from 'vuex'
+import { ItemStatusEnum } from './../models/ItemStatusEnum';
+import { Item } from '@/models/Item'
+import { defineStore } from 'pinia'
 
-Vue.use(Vuex)
+export const TodoStore = defineStore('todo', () => {
+  
+    const items: Item[] = [
+      {
+          description: "Test description 1",
+          createdAt: new Date(),
+          status: ItemStatusEnum.Active,
+          isArchived: false
+      },
+      {
+          description: "2",
+          createdAt: new Date(),
+          status: ItemStatusEnum.Active,
+          isArchived: false
+      },
+      {
+          description: "Test 3",
+          createdAt: new Date(),
+          status: ItemStatusEnum.Done,
+          isArchived: false
+      }
+  ]
 
-export default new Vuex.Store({
-  state: {
-  },
-  getters: {
-  },
-  mutations: {
-  },
-  actions: {
-  },
-  modules: {
+  function getActiveItems(route: string){
+    switch(route){
+      case("/active"):
+        return items.filter((x) => {
+          return x.status === ItemStatusEnum.Active && !x.isArchived
+        })
+      case("/done"):
+        return items.filter((x) => {
+          return x.status === ItemStatusEnum.Done && !x.isArchived
+        })
+      case("/archived"):
+        return items.filter((x) => {
+          return x.isArchived
+        })
+    }
   }
+
+  return { items, getActiveItems}
 })
