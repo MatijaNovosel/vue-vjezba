@@ -1,7 +1,6 @@
 <template>
   <div class="text-center">
     <v-dialog
-      v-model="dialog"
       width="500"
     >
       <v-card>
@@ -40,54 +39,5 @@ interface State {
 }
 
 export default defineComponent({
-    props: {
-        title: { type: String, required: true },
-        text: {
-        type: String,
-        default: ""
-        },
-        open: { type: Boolean, required: true }
-    },
-     setup(props, context: SetupContext) {
-        const state: State = reactive({
-            title: props.title,
-            text: props.text,
-            open: props.open
-        });
-
-    watch(
-      () => props.text,
-      val => (state.text = val)
-    );
-
-    watch(
-      () => props.title,
-      val => (state.title = val)
-    );
-
-    watch(
-      () => props.open,
-      val => (state.open = val)
-    );
-
-    function yes() {
-      context.emit("yes");
-    }
-
-    function no() {
-      context.emit("no");
-    }
-
-    function closeDialog() {
-      state.open = false;
-      context.emit("update:open", state.open);
-    }
-
-    return {
-      state,
-      yes,
-      no,
-      closeDialog
-    };
-  }
+   
 })

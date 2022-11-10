@@ -10,8 +10,8 @@
                 </v-card-text>
             </div>
             <div class="right">
-                <v-card-actions class="justify-center">
-                    <v-btn color="primary">Done</v-btn>
+                <v-card-actions>
+                    <v-btn v-if="item.status === status.Active" color="primary">Done</v-btn>
                     <v-btn color="primary">Edit</v-btn>
                 </v-card-actions>
             </div>
@@ -46,7 +46,7 @@ export default defineComponent({
     display: flex;
     flex-direction: row;
     justify-content: center;
-    flex-shrink: 1;
+    min-width: 500px;
 }
 .left{
     padding-right: 10px;

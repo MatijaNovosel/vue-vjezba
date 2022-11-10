@@ -1,6 +1,7 @@
 <template>
   <div class="container">
-    <ItemComponent v-for="(item, i) in state.items" :key="i" :item="item" />
+      {{ active }}
+    <ItemComponent v-for="(item, i) in filteredItems" :key="i" :item="item" />
   </div>
 </template>
 
@@ -10,41 +11,34 @@ import ItemComponent from "@/components/Item.vue";
 import useRoute from "@/composables/useRoute";
 import { TodoStore } from "@/store";
 import { Item } from "@/models/Item";
+import { storeToRefs } from "pinia";
+import { ItemStatusEnum } from "@/models/ItemStatusEnum";
 
 export default defineComponent({
   components: { ItemComponent },
   setup() {
-    const store = TodoStore();
-    const state = reactive<{
-        items: Item[]
-    }>({
-        items: []
-    });
-
+    const { changeFlag, filteredItems, addItem, active } = TodoStore();
     const { route } = useRoute();
 
     watch(
       () => route.value,
       (val) => {
-          debugger;
-          switch(val?.path){
-            case("/active"):
-                state.items = store.activeItems;
-                break;
-            case("/done"):
-                state.items = store.doneItems;
-                break;
-            case("/archived"):
-                state.items = store.archivedItems;
-                break;
+          let element: Item = {
+                description:"tette",
+                createdAt: new Date(),
+                status: ItemStatusEnum.Active,
+                isArchived: false
           }
+          addItem(element)
+          changeFlag();
       },
       {
-        immediate: true // ili koristi watchEffect (https://www.vuemastery.com/blog/vues-watch-vs-watcheffect-which-should-i-use/)
+        immediate: true
       }
     );
     return {
-      state
+        filteredItems,
+        active
     };
   }
 });
@@ -56,5 +50,6 @@ export default defineComponent({
   justify-content: center;
   flex-shrink: 1;
   gap: 10px;
+  flex-wrap: wrap;
 }
 </style>

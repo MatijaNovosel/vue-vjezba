@@ -6,9 +6,9 @@ Vue.use(VueRouter);
 
 const routes: RouteConfig[] = [
   { path: "/", redirect: "/active" },
-  { path: "/active", name: "Active", component: ItemView },
-  { path: "/done", name: "Done", component: ItemView },
-  { path: "/archived", name: "Archived", component: ItemView }
+  { path: "/active", name: "active", component: ItemView },
+  { path: "/done", name: "done", component: ItemView },
+  { path: "/archived", name: "archived", component: ItemView }
 ];
 
 const router = new VueRouter({
