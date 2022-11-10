@@ -1,60 +1,79 @@
 <template>
-    <v-card width="fit-content" padding="10px">
-        <div class="container">
-            <div class="left">
-                <v-card-title>
-                    <span class="headline font-weight-bold" :class="{ 'doneTitle' : item.status === status.Done}">{{item.description}}</span>
-                </v-card-title>
-                <v-card-text class="font-weight-light">
-                    {{item.createdAt}}
-                </v-card-text>
-            </div>
-            <div class="right">
-                <v-card-actions>
-                    <v-btn v-if="item.status === status.Active" color="primary">Done</v-btn>
-                    <v-btn color="primary">Edit</v-btn>
-                </v-card-actions>
-            </div>
-        </div>
-    </v-card>
+  <v-card
+    width="fit-content"
+    padding="10px"
+    v-on="item.isArchived ? { click: () => store.unarchiveItem(item) } : {}"
+  >
+    <div class="container">
+      <div class="left">
+        <v-card-title>
+          <span
+            class="headline font-weight-bold"
+            :class="{ doneTitle: item.status === status.Done }"
+          >
+            {{ item.description }}
+          </span>
+        </v-card-title>
+        <v-card-text class="font-weight-light">
+          {{ item.createdAt }}
+        </v-card-text>
+      </div>
+      <div class="right">
+        <v-card-actions>
+          <v-btn
+            v-if="item.status === status.Active"
+            color="primary"
+            @click="store.changeStatus(item)"
+          >
+            Done
+          </v-btn>
+          <v-btn color="primary">Edit</v-btn>
+        </v-card-actions>
+      </div>
+    </div>
+  </v-card>
 </template>
 
 <script lang="ts">
-import { Item } from '@/models/Item'
-import { defineComponent, PropType } from 'vue'
-import { ItemStatusEnum } from '@/models/ItemStatusEnum'
+import { Item } from "@/models/Item";
+import { defineComponent, PropType } from "vue";
+import { ItemStatusEnum } from "@/models/ItemStatusEnum";
+import { useTodoStore } from "@/store";
 
 export default defineComponent({
-    props: {
-        item: {
-            type: Object as PropType<Item>,
-            required: true,
-            default: {}
-        }
-    },
-    setup(){
-        const status = ItemStatusEnum
-        return{
-            status
-        }
-    },
-})
+  props: {
+    item: {
+      type: Object as PropType<Item>,
+      required: true,
+      default: {}
+    }
+  },
+  setup() {
+    const store = useTodoStore();
+    const status = ItemStatusEnum;
+
+    return {
+      status,
+      store
+    };
+  }
+});
 </script>
 
 <style scoped lang="scss">
-.container{
-    display: flex;
-    flex-direction: row;
-    justify-content: center;
-    min-width: 500px;
+.container {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  min-width: 500px;
 }
-.left{
-    padding-right: 10px;
+.left {
+  padding-right: 10px;
 }
-.right{
-    display: flex;
+.right {
+  display: flex;
 }
-.doneTitle{
-    text-decoration: line-through;
+.doneTitle {
+  text-decoration: line-through;
 }
 </style>

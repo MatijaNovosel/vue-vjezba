@@ -6,6 +6,7 @@ import { computed, ref } from "vue";
 export const useTodoStore = defineStore("todo", () => {
   const active = ref(true);
   const archived = ref(false);
+  const searchString = ref("test");
 
   const items = ref<Item[]>([
     {
@@ -30,16 +31,18 @@ export const useTodoStore = defineStore("todo", () => {
       description: "Test 4",
       createdAt: new Date(),
       status: ItemStatusEnum.Done,
-      isArchived: false
+      isArchived: true
     }
   ]);
 
   const filteredItems = computed(() =>
     items.value.filter((x) => {
-      return (
-        (active.value ? x.status === ItemStatusEnum.Active : x.status === ItemStatusEnum.Done) &&
-        x.isArchived === archived.value
-      );
+      debugger;
+      return archived.value
+        ? x.isArchived
+        : (active.value ? x.status === ItemStatusEnum.Active : x.status === ItemStatusEnum.Done) &&
+            !x.isArchived &&
+            x.description.toLowerCase().includes(searchString.value);
     })
   );
 
@@ -47,9 +50,42 @@ export const useTodoStore = defineStore("todo", () => {
     items.value.push(item);
   }
 
-  const changeFlag = () => {
-    active.value = !active.value;
+  const changeFlag = (name: string) => {
+    switch (name) {
+      case "active":
+        active.value = true;
+        archived.value = false;
+        break;
+      case "done":
+        active.value = false;
+        archived.value = false;
+        break;
+      case "archived":
+        archived.value = true;
+        break;
+    }
   };
 
-  return { filteredItems, addItem, changeFlag, active };
+  const archiveAll = () => {
+    items.value.map(function (x) {
+      x.isArchived = true;
+      return x;
+    });
+  };
+
+  function unarchiveItem(item: Item) {
+    let element = items.value.find((x) => x === item);
+    if (element) {
+      element.isArchived = false;
+    }
+  }
+
+  function changeStatus(item: Item) {
+    let element = items.value.find((x) => x === item);
+    if (element) {
+      element.status === ItemStatusEnum.Active ? ItemStatusEnum.Done : ItemStatusEnum.Active;
+    }
+  }
+
+  return { filteredItems, addItem, changeFlag, active, archiveAll, changeStatus, unarchiveItem };
 });

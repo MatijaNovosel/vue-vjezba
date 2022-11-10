@@ -1,48 +1,53 @@
 <template>
   <v-app>
-    <v-app-bar
-      app
-      color="primary"
-      dark
-    >
-        <v-spacer></v-spacer>
-        <div class="nav">
-            <v-btn elevation="2" class="btn" @click.stop="showAddEditDialog=true">
-                Add Item
-            </v-btn>
-            <AddEditItemDIalog v-model="showAddEditDialog"/>
-            <v-btn elevation="2" class="btn">
-                Clear Archive
-            </v-btn>
-        </div>
+    <v-app-bar app color="primary" dark>
+      <v-spacer></v-spacer>
+      <div class="nav">
+        <v-text-field style="height: 30px" label="Search" placeholder="Item name"></v-text-field>
+        <v-btn elevation="2" class="btn" @click="addItem()"> Add Item </v-btn>
+        <v-btn elevation="2" class="btn" @click="store.archiveAll()"> Archive all </v-btn>
+      </div>
     </v-app-bar>
     <v-main>
-      <Tabs/>
+      <Tabs />
     </v-main>
   </v-app>
 </template>
 
-<script>
-import { defineComponent } from 'vue';
-import Tabs from './components/Tabs';
-import AddEditItemDIalog from '@/components/AddEditItemDialog'
-
+<script lang="ts">
+import { defineComponent } from "vue";
+import Tabs from "./components/Tabs.vue";
+import { useTodoStore } from "@/store";
+import { Item } from "./models/Item";
+import { ItemStatusEnum } from "./models/ItemStatusEnum";
 
 export default defineComponent({
-  name: 'App',
+  setup() {
+    const store = useTodoStore();
+
+    function addItem() {
+      let element: Item = {
+        description: "tette",
+        createdAt: new Date(),
+        status: ItemStatusEnum.Active,
+        isArchived: false
+      };
+      store.addItem(element);
+    }
+
+    return {
+      store,
+      addItem
+    };
+  },
+  name: "App",
 
   components: {
-    Tabs,
-    AddEditItemDIalog
-  },
-
-  data () {
-    return {
-      showAddEditDialog: false
-    }
-  },
+    Tabs
+  }
 });
 </script>
+
 <style scoped lang="scss">
 .nav {
   display: flex;

@@ -9,9 +9,7 @@ import { defineComponent, watch } from "vue";
 import ItemComponent from "@/components/Item.vue";
 import useRoute from "@/composables/useRoute";
 import { useTodoStore } from "@/store";
-import { Item } from "@/models/Item";
 import { storeToRefs } from "pinia";
-import { ItemStatusEnum } from "@/models/ItemStatusEnum";
 
 export default defineComponent({
   components: { ItemComponent },
@@ -19,18 +17,14 @@ export default defineComponent({
     const store = useTodoStore();
     const { active, filteredItems } = storeToRefs(store);
     const { route } = useRoute();
+    store.changeFlag(route.value?.name as string);
+
 
     watch(
       () => route.value,
       (val) => {
-        let element: Item = {
-          description: "tette",
-          createdAt: new Date(),
-          status: ItemStatusEnum.Active,
-          isArchived: false
-        };
-        // addItem(element)
-        store.changeFlag();
+        debugger;
+        store.changeFlag(val?.name as string);
       }
     );
     return {
