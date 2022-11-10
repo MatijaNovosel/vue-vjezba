@@ -1,4 +1,4 @@
-export enum ItemStatusEnum{
-    Active,
-    Done
+export enum ItemStatusEnum {
+  Active = 1,
+  Done
 }

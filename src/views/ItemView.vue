@@ -1,15 +1,14 @@
 <template>
   <div class="container">
-      {{ active }}
     <ItemComponent v-for="(item, i) in filteredItems" :key="i" :item="item" />
   </div>
 </template>
 
 <script lang="ts">
-import { computed, defineComponent, reactive, ref, watch } from "vue";
+import { defineComponent, watch } from "vue";
 import ItemComponent from "@/components/Item.vue";
 import useRoute from "@/composables/useRoute";
-import { TodoStore } from "@/store";
+import { useTodoStore } from "@/store";
 import { Item } from "@/models/Item";
 import { storeToRefs } from "pinia";
 import { ItemStatusEnum } from "@/models/ItemStatusEnum";
@@ -17,32 +16,31 @@ import { ItemStatusEnum } from "@/models/ItemStatusEnum";
 export default defineComponent({
   components: { ItemComponent },
   setup() {
-    const { changeFlag, filteredItems, addItem, active } = TodoStore();
+    const store = useTodoStore();
+    const { active, filteredItems } = storeToRefs(store);
     const { route } = useRoute();
 
     watch(
       () => route.value,
       (val) => {
-          let element: Item = {
-                description:"tette",
-                createdAt: new Date(),
-                status: ItemStatusEnum.Active,
-                isArchived: false
-          }
-          addItem(element)
-          changeFlag();
-      },
-      {
-        immediate: true
+        let element: Item = {
+          description: "tette",
+          createdAt: new Date(),
+          status: ItemStatusEnum.Active,
+          isArchived: false
+        };
+        // addItem(element)
+        store.changeFlag();
       }
     );
     return {
-        filteredItems,
-        active
+      filteredItems,
+      active
     };
   }
 });
 </script>
+
 <style scoped lang="scss">
 .container {
   padding: 10px;
