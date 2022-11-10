@@ -3,7 +3,12 @@
     <v-app-bar app color="primary" dark>
       <v-spacer></v-spacer>
       <div class="nav">
-        <v-text-field style="height: 30px" label="Search" placeholder="Item name"></v-text-field>
+        <v-text-field
+          style="height: 30px"
+          label="Search"
+          placeholder="Item name"
+          v-model="store.searchString"
+        ></v-text-field>
         <v-btn elevation="2" class="btn" @click="addItem()"> Add Item </v-btn>
         <v-btn elevation="2" class="btn" @click="store.archiveAll()"> Archive all </v-btn>
       </div>
@@ -20,10 +25,12 @@ import Tabs from "./components/Tabs.vue";
 import { useTodoStore } from "@/store";
 import { Item } from "./models/Item";
 import { ItemStatusEnum } from "./models/ItemStatusEnum";
+import { storeToRefs } from "pinia";
 
 export default defineComponent({
   setup() {
     const store = useTodoStore();
+    const { searchString } = storeToRefs(store);
 
     function addItem() {
       let element: Item = {

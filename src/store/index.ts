@@ -6,7 +6,7 @@ import { computed, ref } from "vue";
 export const useTodoStore = defineStore("todo", () => {
   const active = ref(true);
   const archived = ref(false);
-  const searchString = ref("test");
+  const searchString = ref("");
 
   const items = ref<Item[]>([
     {
@@ -38,11 +38,14 @@ export const useTodoStore = defineStore("todo", () => {
   const filteredItems = computed(() =>
     items.value.filter((x) => {
       debugger;
-      return archived.value
-        ? x.isArchived
-        : (active.value ? x.status === ItemStatusEnum.Active : x.status === ItemStatusEnum.Done) &&
-            !x.isArchived &&
-            x.description.toLowerCase().includes(searchString.value);
+      return (
+        (archived.value
+          ? x.isArchived
+          : (active.value
+              ? x.status === ItemStatusEnum.Active
+              : x.status === ItemStatusEnum.Done) && !x.isArchived) &&
+        x.description.toLowerCase().includes(searchString.value)
+      );
     })
   );
 
@@ -87,5 +90,14 @@ export const useTodoStore = defineStore("todo", () => {
     }
   }
 
-  return { filteredItems, addItem, changeFlag, active, archiveAll, changeStatus, unarchiveItem };
+  return {
+    filteredItems,
+    addItem,
+    changeFlag,
+    active,
+    archiveAll,
+    changeStatus,
+    unarchiveItem,
+    searchString
+  };
 });
