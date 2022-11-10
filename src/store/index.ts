@@ -83,10 +83,10 @@ export const useTodoStore = defineStore("todo", () => {
     }
   }
 
-  function changeStatus(item: Item) {
+  function finishTask(item: Item) {
     let element = items.value.find((x) => x === item);
     if (element) {
-      element.status === ItemStatusEnum.Active ? ItemStatusEnum.Done : ItemStatusEnum.Active;
+      element.status = ItemStatusEnum.Done;
     }
   }
 
@@ -96,7 +96,7 @@ export const useTodoStore = defineStore("todo", () => {
     changeFlag,
     active,
     archiveAll,
-    changeStatus,
+    finishTask,
     unarchiveItem,
     searchString
   };

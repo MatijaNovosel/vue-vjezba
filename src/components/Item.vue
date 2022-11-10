@@ -23,7 +23,7 @@
           <v-btn
             v-if="item.status === status.Active"
             color="primary"
-            @click="store.changeStatus(item)"
+            @click="store.finishTask(item)"
           >
             Done
           </v-btn>
