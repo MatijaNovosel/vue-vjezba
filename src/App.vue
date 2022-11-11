@@ -9,7 +9,11 @@
           placeholder="Item name"
           v-on:input="debounceSearch"
         ></v-text-field>
-        <v-btn elevation="2" class="btn" @click="addItem()"> Add Item </v-btn>
+        <v-btn elevation="2" class="btn" @click="state.showDialog = true"> Add Item </v-btn>
+        <AddEditItemDialog
+          :showDialog="state.showDialog"
+          @close="state.showDialog = false"
+        ></AddEditItemDialog>
         <v-btn elevation="2" class="btn" @click="store.archiveAll()"> Archive all </v-btn>
       </div>
     </v-app-bar>
@@ -20,18 +24,21 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from "vue";
+import { defineComponent, reactive } from "vue";
 import Tabs from "./components/Tabs.vue";
 import { useTodoStore } from "@/store";
 import { Item } from "./models/Item";
 import { ItemStatusEnum } from "./models/ItemStatusEnum";
 import { storeToRefs } from "pinia";
+import AddEditItemDialog from "./components/AddEditItemDialog.vue";
 import _ from "lodash";
 
 export default defineComponent({
   setup() {
     const store = useTodoStore();
     const { searchString } = storeToRefs(store);
+
+    const state = reactive({ showDialog: false });
 
     function addItem() {
       let element: Item = {
@@ -50,13 +57,15 @@ export default defineComponent({
     return {
       store,
       addItem,
-      debounceSearch
+      debounceSearch,
+      state
     };
   },
   name: "App",
 
   components: {
-    Tabs
+    Tabs,
+    AddEditItemDialog
   }
 });
 </script>

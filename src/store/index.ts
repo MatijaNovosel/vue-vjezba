@@ -37,7 +37,6 @@ export const useTodoStore = defineStore("todo", () => {
 
   const filteredItems = computed(() =>
     items.value.filter((x) => {
-      debugger;
       return (
         (archived.value
           ? x.isArchived

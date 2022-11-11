@@ -51,7 +51,6 @@ export default defineComponent({
   setup() {
     const store = useTodoStore();
     const status = ItemStatusEnum;
-
     return {
       status,
       store

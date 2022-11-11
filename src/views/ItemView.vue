@@ -19,11 +19,9 @@ export default defineComponent({
     const { route } = useRoute();
     store.changeFlag(route.value?.name as string);
 
-
     watch(
       () => route.value,
       (val) => {
-        debugger;
         store.changeFlag(val?.name as string);
       }
     );
