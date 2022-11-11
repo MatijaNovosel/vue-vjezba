@@ -7,6 +7,7 @@
     "build": "vue-cli-service build"
   },
   "dependencies": {
+    "lodash": "^4.17.21",
     "pinia": "^2.0.23",
     "vue": "^2.7.0",
     "vue-router": "^3.5.4",
@@ -14,6 +15,7 @@
     "vuex": "^3.6.2"
   },
   "devDependencies": {
+    "@types/lodash": "^4.14.188",
     "@vue/cli-plugin-router": "~5.0.0",
     "@vue/cli-plugin-typescript": "~5.0.0",
     "@vue/cli-plugin-vuex": "~5.0.0",
