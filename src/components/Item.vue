@@ -27,7 +27,12 @@
           >
             Done
           </v-btn>
-          <v-btn color="primary">Edit</v-btn>
+          <v-btn color="primary" @click="state.showDialog = true">Edit</v-btn>
+          <AddEditItemDialog
+            :showDialog="state.showDialog"
+            :item="item"
+            @close="state.showDialog = false"
+          ></AddEditItemDialog>
         </v-card-actions>
       </div>
     </div>
@@ -36,9 +41,10 @@
 
 <script lang="ts">
 import { Item } from "@/models/Item";
-import { defineComponent, PropType } from "vue";
+import { defineComponent, PropType, reactive } from "vue";
 import { ItemStatusEnum } from "@/models/ItemStatusEnum";
 import { useTodoStore } from "@/store";
+import AddEditItemDialog from "./AddEditItemDialog.vue";
 
 export default defineComponent({
   props: {
@@ -51,11 +57,14 @@ export default defineComponent({
   setup() {
     const store = useTodoStore();
     const status = ItemStatusEnum;
+    const state = reactive({ showDialog: false });
     return {
       status,
-      store
+      store,
+      state
     };
-  }
+  },
+  components: { AddEditItemDialog }
 });
 </script>
 
