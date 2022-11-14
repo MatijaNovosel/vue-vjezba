@@ -114,7 +114,6 @@ export default defineComponent({
 
     function closeDialog() {
       state.show = false;
-      debugger;
       addEditItemForm.value.reset();
       context.emit("close");
     }
@@ -122,6 +121,7 @@ export default defineComponent({
     function saveData() {
       if (!isEditMode) {
         let element: Item = {
+          id: Math.random() * (9999 - 5) + 9999,
           description: state.formData.description as string,
           createdAt: new Date(),
           status: ItemStatusEnum.Active,
@@ -129,6 +129,16 @@ export default defineComponent({
         };
         state.formData.description = "";
         store.addItem(element);
+      } else {
+        debugger;
+        let element: Item = {
+          id: props.item?.id as number,
+          description: state.formData.description as string,
+          createdAt: props.item?.createdAt as Date,
+          status: state.formData.status as ItemStatusEnum,
+          isArchived: state.formData.isArchived as boolean
+        };
+        store.updateItem(element);
       }
       closeDialog();
     }

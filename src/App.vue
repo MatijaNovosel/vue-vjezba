@@ -40,23 +40,12 @@ export default defineComponent({
 
     const state = reactive({ showDialog: false });
 
-    function addItem() {
-      let element: Item = {
-        description: "tette",
-        createdAt: new Date(),
-        status: ItemStatusEnum.Active,
-        isArchived: false
-      };
-      store.addItem(element);
-    }
-
     const debounceSearch = _.debounce((value: any) => {
       store.searchString = value;
     }, 1000);
 
     return {
       store,
-      addItem,
       debounceSearch,
       state
     };

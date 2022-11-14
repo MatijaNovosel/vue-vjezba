@@ -1,8 +1,9 @@
-import { ItemStatusEnum } from "./ItemStatusEnum"
+import { ItemStatusEnum } from "./ItemStatusEnum";
 
 export interface Item {
-    description: string,
-    createdAt: Date,
-    status: ItemStatusEnum
-    isArchived: boolean
+  id: number;
+  description: string;
+  createdAt: Date;
+  status: ItemStatusEnum;
+  isArchived: boolean;
 }

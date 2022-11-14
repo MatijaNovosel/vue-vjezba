@@ -1,6 +1,6 @@
 <template>
   <div class="container">
-    <ItemComponent v-for="(item, i) in filteredItems" :key="i" :item="item" />
+    <ItemComponent v-for="(item, i) in filteredItems" :key="item.id" :item="item" />
   </div>
 </template>
 

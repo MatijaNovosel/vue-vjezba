@@ -10,24 +10,28 @@ export const useTodoStore = defineStore("todo", () => {
 
   const items = ref<Item[]>([
     {
+      id: 1,
       description: "Test description 1",
       createdAt: new Date(),
       status: ItemStatusEnum.Active,
       isArchived: false
     },
     {
+      id: 2,
       description: "2",
       createdAt: new Date(),
       status: ItemStatusEnum.Done,
       isArchived: false
     },
     {
+      id: 3,
       description: "Test 3",
       createdAt: new Date(),
       status: ItemStatusEnum.Done,
       isArchived: false
     },
     {
+      id: 4,
       description: "Test 4",
       createdAt: new Date(),
       status: ItemStatusEnum.Done,
@@ -50,6 +54,12 @@ export const useTodoStore = defineStore("todo", () => {
 
   function addItem(item: Item) {
     items.value.push(item);
+  }
+
+  function updateItem(item: Item) {
+    debugger;
+    let index = items.value.findIndex((x) => x.id === item.id);
+    items.value.splice(index, 1, item);
   }
 
   const changeFlag = (name: string) => {
@@ -91,12 +101,13 @@ export const useTodoStore = defineStore("todo", () => {
 
   return {
     filteredItems,
+    active,
+    searchString,
     addItem,
     changeFlag,
-    active,
     archiveAll,
     finishTask,
     unarchiveItem,
-    searchString
+    updateItem
   };
 });
