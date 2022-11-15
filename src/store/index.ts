@@ -47,7 +47,7 @@ export const useTodoStore = defineStore("todo", () => {
           : (active.value
               ? x.status === ItemStatusEnum.Active
               : x.status === ItemStatusEnum.Done) && !x.isArchived) &&
-        x.description.toLowerCase().includes(searchString.value)
+        x.description.toLowerCase().includes(searchString.value.toLowerCase())
       );
     })
   );

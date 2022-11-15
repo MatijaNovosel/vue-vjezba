@@ -15,45 +15,6 @@
                 ></v-text-field>
                 <span>{{ errors[0] }}</span>
               </ValidationProvider>
-              <v-menu
-                v-if="isEditMode"
-                :close-on-content-click="false"
-                :nudge-right="40"
-                transition="scale-transition"
-                offset-y
-                min-width="auto"
-              >
-                <template v-slot:activator="{ on, attrs }">
-                  <v-text-field
-                    label="Date"
-                    prepend-icon="mdi-calendar"
-                    v-bind="attrs"
-                    v-on="on"
-                  ></v-text-field>
-                </template>
-                <v-date-picker></v-date-picker>
-              </v-menu>
-              <v-menu
-                v-if="isEditMode"
-                ref="menu"
-                :close-on-content-click="false"
-                :nudge-right="40"
-                transition="scale-transition"
-                offset-y
-                max-width="290px"
-                min-width="290px"
-              >
-                <template v-slot:activator="{ on, attrs }">
-                  <v-text-field
-                    label="Time"
-                    prepend-icon="mdi-clock-time-four-outline"
-                    readonly
-                    v-bind="attrs"
-                    v-on="on"
-                  ></v-text-field>
-                </template>
-                <v-time-picker full-width></v-time-picker>
-              </v-menu>
               <v-radio-group row v-if="isEditMode" v-model="state.formData.status">
                 <v-radio label="Active" :value="status.Active"></v-radio>
                 <v-radio label="Done" :value="status.Done"></v-radio>
@@ -104,8 +65,6 @@ export default defineComponent({
       show: props.showDialog,
       formData: {
         description: isEditMode ? (props.item?.description as string) : null,
-        //date: isEditMode ? (props.item?.description as string) : null,
-        //time: isEditMode ? (props.item?.description as string) : null,
         status: isEditMode ? props.item?.status : null,
         isArchived: isEditMode ? props.item?.isArchived : null
       }

@@ -36,13 +36,15 @@ import _ from "lodash";
 export default defineComponent({
   setup() {
     const store = useTodoStore();
-    const { searchString } = storeToRefs(store);
-
     const state = reactive({ showDialog: false });
+    let timeout: any = undefined;
 
-    const debounceSearch = _.debounce((value: any) => {
-      store.searchString = value;
-    }, 1000);
+    const debounceSearch = (value: any) => {
+      if (timeout) clearTimeout(timeout);
+      timeout = setTimeout(() => {
+        store.searchString = value;
+      }, 1000);
+    };
 
     return {
       store,
