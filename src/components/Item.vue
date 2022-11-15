@@ -15,7 +15,7 @@
           </span>
         </v-card-title>
         <v-card-text class="font-weight-light">
-          {{ item.createdAt }}
+          Created {{ daysAgo }} days ago ({{ formattedDate }})
         </v-card-text>
       </div>
       <div class="right">
@@ -54,14 +54,23 @@ export default defineComponent({
       default: {}
     }
   },
-  setup() {
+  setup(props) {
     const store = useTodoStore();
     const status = ItemStatusEnum;
+
+    const daysAgo = Math.round(
+      Math.abs(new Date().getTime() - props.item.createdAt.getTime()) / (1000 * 3600 * 24)
+    );
+    const formattedDate =
+      props.item.createdAt.toLocaleDateString() + " " + props.item.createdAt.toLocaleTimeString();
+
     const state = reactive({ showDialog: false });
     return {
       status,
       store,
-      state
+      state,
+      daysAgo,
+      formattedDate
     };
   },
   components: { AddEditItemDialog }
@@ -72,8 +81,7 @@ export default defineComponent({
 .container {
   display: flex;
   flex-direction: row;
-  justify-content: center;
-  min-width: 500px;
+  justify-content: space-between;
 }
 .left {
   padding-right: 10px;
