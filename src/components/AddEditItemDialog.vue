@@ -9,18 +9,18 @@
             <v-card-text>
               <ValidationProvider name="Description" rules="required" v-slot="{ errors }">
                 <v-text-field
-                  label="Description"
+                  :label="$t('item.description')"
                   prepend-icon="mdi-clock-time-four-outline"
                   v-model="state.formData.description"
                 ></v-text-field>
                 <span>{{ errors[0] }}</span>
               </ValidationProvider>
               <v-radio-group row v-if="isEditMode" v-model="state.formData.status">
-                <v-radio label="Active" :value="status.Active"></v-radio>
-                <v-radio label="Done" :value="status.Done"></v-radio>
+                <v-radio :label="$t('item.active')" :value="status.Active"></v-radio>
+                <v-radio :label="$t('item.done')" :value="status.Done"></v-radio>
               </v-radio-group>
               <v-checkbox
-                label="Archived"
+                :label="$t('item.archived')"
                 v-if="isEditMode"
                 v-model="state.formData.isArchived"
               ></v-checkbox>
@@ -30,8 +30,8 @@
 
             <v-card-actions>
               <v-spacer></v-spacer>
-              <v-btn color="primary" text type="submit">Save</v-btn>
-              <v-btn color="primary" text @click="closeDialog()">Cancel</v-btn>
+              <v-btn color="primary" text type="submit">{{$t('buttons.save')}}</v-btn>
+              <v-btn color="primary" text @click="closeDialog()">{{$t('buttons.cancel')}}</v-btn>
             </v-card-actions>
           </form>
         </ValidationObserver>

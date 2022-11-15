@@ -5,16 +5,28 @@
       <div class="nav">
         <v-text-field
           style="height: 30px"
-          label="Search"
-          placeholder="Item name"
+          :label="$t('buttons.search')"
           v-on:input="debounceSearch"
         ></v-text-field>
-        <v-btn elevation="2" class="btn" @click="state.showDialog = true"> Add Item </v-btn>
+        <v-btn elevation="2" class="btn" @click="state.showDialog = true">
+          {{ $t("item.addItem") }}
+        </v-btn>
         <AddEditItemDialog
           :showDialog="state.showDialog"
           @close="state.showDialog = false"
         ></AddEditItemDialog>
-        <v-btn elevation="2" class="btn" @click="store.archiveAll()"> Archive all </v-btn>
+        <v-btn elevation="2" class="btn" @click="store.archiveAll()">
+          {{ $t("buttons.archiveAll") }}
+        </v-btn>
+        <v-select
+          style="height: 30px; width: 150px"
+          :items="languages"
+          item-value="locale"
+          item-text="name"
+          v-model="$i18n.locale"
+          :dense="true"
+          outlined
+        ></v-select>
       </div>
     </v-app-bar>
     <v-main>
@@ -27,16 +39,25 @@
 import { defineComponent, reactive } from "vue";
 import Tabs from "./components/Tabs.vue";
 import { useTodoStore } from "@/store";
-import { Item } from "./models/Item";
-import { ItemStatusEnum } from "./models/ItemStatusEnum";
-import { storeToRefs } from "pinia";
 import AddEditItemDialog from "./components/AddEditItemDialog.vue";
-import _ from "lodash";
+import i18n from "@/translations/i18n";
 
 export default defineComponent({
   setup() {
     const store = useTodoStore();
     const state = reactive({ showDialog: false });
+
+    const languages = [
+      {
+        locale: "en",
+        name: i18n.t("languages.english").toString()
+      },
+      {
+        locale: "hr",
+        name: i18n.t("languages.croatian").toString()
+      }
+    ];
+
     let timeout: any = undefined;
 
     const debounceSearch = (value: any) => {
@@ -48,8 +69,9 @@ export default defineComponent({
 
     return {
       store,
-      debounceSearch,
-      state
+      state,
+      languages,
+      debounceSearch
     };
   },
   name: "App",

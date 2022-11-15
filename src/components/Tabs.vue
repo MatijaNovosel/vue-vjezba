@@ -1,9 +1,9 @@
 <template>
   <div>
     <v-tabs>
-      <v-tab to="/active">Active</v-tab>
-      <v-tab to="/done">Done</v-tab>
-      <v-tab to="/archived">Archived</v-tab>
+      <v-tab to="/active">{{ $t("item.active") }}</v-tab>
+      <v-tab to="/done">{{ $t("item.done") }}</v-tab>
+      <v-tab to="/archived">{{ $t("item.archived") }}</v-tab>
     </v-tabs>
     <router-view />
   </div>

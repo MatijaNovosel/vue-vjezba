@@ -15,7 +15,7 @@
           </span>
         </v-card-title>
         <v-card-text class="font-weight-light">
-          Created {{ daysAgo }} days ago ({{ formattedDate }})
+          {{ $t("item.daysAgo", { daysAgo: daysAgo }) }} ({{ formattedDate }})
         </v-card-text>
       </div>
       <div class="right">
@@ -25,9 +25,9 @@
             color="primary"
             @click="store.finishTask(item)"
           >
-            Done
+            {{ $t("buttons.done") }}
           </v-btn>
-          <v-btn color="primary" @click="state.showDialog = true">Edit</v-btn>
+          <v-btn color="primary" @click="state.showDialog = true">{{ $t("buttons.edit") }}</v-btn>
           <AddEditItemDialog
             :showDialog="state.showDialog"
             :item="item"
