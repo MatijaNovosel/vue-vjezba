@@ -1,20 +1,17 @@
 <template>
   <v-app>
     <v-app-bar app color="primary" dark>
-      <v-spacer></v-spacer>
+      <v-spacer />
       <div class="nav">
         <v-text-field
           style="height: 30px"
           :label="$t('buttons.search')"
           v-on:input="debounceSearch"
-        ></v-text-field>
+        />
         <v-btn elevation="2" class="btn" @click="state.showDialog = true">
           {{ $t("item.addItem") }}
         </v-btn>
-        <AddEditItemDialog
-          :showDialog="state.showDialog"
-          @close="state.showDialog = false"
-        ></AddEditItemDialog>
+        <AddEditItemDialog :showDialog="state.showDialog" @close="state.showDialog = false" />
         <v-btn elevation="2" class="btn" @click="store.archiveAll()">
           {{ $t("buttons.archiveAll") }}
         </v-btn>
@@ -26,7 +23,7 @@
           v-model="$i18n.locale"
           :dense="true"
           outlined
-        ></v-select>
+        />
       </div>
     </v-app-bar>
     <v-main>
@@ -36,7 +33,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, reactive } from "vue";
+import { computed, defineComponent, reactive } from "vue";
 import Tabs from "./components/Tabs.vue";
 import { useTodoStore } from "@/store";
 import AddEditItemDialog from "./components/AddEditItemDialog.vue";
@@ -47,7 +44,7 @@ export default defineComponent({
     const store = useTodoStore();
     const state = reactive({ showDialog: false });
 
-    const languages = [
+    const languages = computed(() => [
       {
         locale: "en",
         name: i18n.t("languages.english").toString()
@@ -56,7 +53,7 @@ export default defineComponent({
         locale: "hr",
         name: i18n.t("languages.croatian").toString()
       }
-    ];
+    ]);
 
     let timeout: any = undefined;
 
