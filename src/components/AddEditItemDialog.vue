@@ -4,8 +4,12 @@
       <v-card>
         <ValidationObserver v-slot="{ handleSubmit }" ref="addEditItemForm">
           <form @submit.prevent="handleSubmit(saveData)">
-            <v-card-title class="text-h5 grey lighten-2">Add/Edit item</v-card-title>
-
+            <v-card-title v-if="!isEditMode" class="text-h5 grey lighten-2">{{
+              $t("item.addItem")
+            }}</v-card-title>
+            <v-card-title v-if="isEditMode" class="text-h5 grey lighten-2">{{
+              $t("item.editItem")
+            }}</v-card-title>
             <v-card-text>
               <ValidationProvider name="Description" rules="required" v-slot="{ errors }">
                 <v-text-field
@@ -30,8 +34,8 @@
 
             <v-card-actions>
               <v-spacer></v-spacer>
-              <v-btn color="primary" text type="submit">{{$t('buttons.save')}}</v-btn>
-              <v-btn color="primary" text @click="closeDialog()">{{$t('buttons.cancel')}}</v-btn>
+              <v-btn color="primary" text type="submit">{{ $t("buttons.save") }}</v-btn>
+              <v-btn color="primary" text @click="closeDialog()">{{ $t("buttons.cancel") }}</v-btn>
             </v-card-actions>
           </form>
         </ValidationObserver>
