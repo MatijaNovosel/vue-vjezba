@@ -7,7 +7,7 @@
             <v-card-title v-if="!isEditMode" class="text-h5 grey lighten-2">{{
               $t("item.addItem")
             }}</v-card-title>
-            <v-card-title v-if="isEditMode" class="text-h5 grey lighten-2">{{
+            <v-card-title v-else class="text-h5 grey lighten-2">{{
               $t("item.editItem")
             }}</v-card-title>
             <v-card-text>
@@ -19,15 +19,16 @@
                 ></v-text-field>
                 <span>{{ errors[0] }}</span>
               </ValidationProvider>
-              <v-radio-group row v-if="isEditMode" v-model="state.formData.status">
-                <v-radio :label="$t('item.active')" :value="status.Active"></v-radio>
-                <v-radio :label="$t('item.done')" :value="status.Done"></v-radio>
-              </v-radio-group>
-              <v-checkbox
-                :label="$t('item.archived')"
-                v-if="isEditMode"
-                v-model="state.formData.isArchived"
-              ></v-checkbox>
+              <template v-if="isEditMode">
+                <v-radio-group row v-model="state.formData.status">
+                  <v-radio :label="$t('item.active')" :value="status.Active"></v-radio>
+                  <v-radio :label="$t('item.done')" :value="status.Done"></v-radio>
+                </v-radio-group>
+                <v-checkbox
+                  :label="$t('item.archived')"
+                  v-model="state.formData.isArchived"
+                ></v-checkbox>
+              </template>
             </v-card-text>
 
             <v-divider></v-divider>

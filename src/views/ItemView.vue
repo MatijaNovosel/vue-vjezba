@@ -1,5 +1,5 @@
 <template>
-  <div class="container">
+  <div class="d-flex flex-shrink-1 flex-wrap justify-center p-a-3" style="gap: 15px">
     <ItemComponent v-for="(item, i) in filteredItems" :key="item.id" :item="item" />
   </div>
 </template>
@@ -32,14 +32,3 @@ export default defineComponent({
   }
 });
 </script>
-
-<style scoped lang="scss">
-.container {
-  padding: 10px;
-  display: flex;
-  justify-content: center;
-  flex-shrink: 1;
-  gap: 10px;
-  flex-wrap: wrap;
-}
-</style>
