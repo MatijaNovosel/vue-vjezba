@@ -7,37 +7,18 @@ export const useTodoStore = defineStore("todo", () => {
   const active = ref(true);
   const archived = ref(false);
   const searchString = ref("");
+  const items = ref<Item[]>([]);
 
-  const items = ref<Item[]>([
-    {
-      id: 1,
-      description: "Test description 1",
-      createdAt: new Date(),
-      status: ItemStatusEnum.Active,
-      isArchived: false
-    },
-    {
-      id: 2,
-      description: "2",
-      createdAt: new Date(),
-      status: ItemStatusEnum.Done,
-      isArchived: false
-    },
-    {
-      id: 3,
-      description: "Test 3",
-      createdAt: new Date(),
-      status: ItemStatusEnum.Done,
-      isArchived: false
-    },
-    {
-      id: 4,
-      description: "Test 4",
-      createdAt: new Date(),
-      status: ItemStatusEnum.Done,
-      isArchived: true
-    }
-  ]);
+  JSON.parse(localStorage.getItem("items") || "[]").forEach((element: any) => {
+    let item: Item = {
+      id: element.id,
+      description: element.description,
+      createdAt: new Date(element.createdAt),
+      status: element.status,
+      isArchived: element.isArchived
+    };
+    items.value.push(item);
+  });
 
   const filteredItems = computed(() =>
     items.value.filter((x) => {
@@ -54,12 +35,13 @@ export const useTodoStore = defineStore("todo", () => {
 
   function addItem(item: Item) {
     items.value.push(item);
+    localStorage.setItem("items", JSON.stringify(items.value));
   }
 
   function updateItem(item: Item) {
-    debugger;
     let index = items.value.findIndex((x) => x.id === item.id);
     items.value.splice(index, 1, item);
+    localStorage.setItem("items", JSON.stringify(items.value));
   }
 
   const changeFlag = (name: string) => {
@@ -83,6 +65,7 @@ export const useTodoStore = defineStore("todo", () => {
       x.isArchived = true;
       return x;
     });
+    localStorage.setItem("items", JSON.stringify(items.value));
   };
 
   function unarchiveItem(item: Item) {
@@ -90,6 +73,7 @@ export const useTodoStore = defineStore("todo", () => {
     if (element) {
       element.isArchived = false;
     }
+    localStorage.setItem("items", JSON.stringify(items.value));
   }
 
   function finishTask(item: Item) {
@@ -97,6 +81,7 @@ export const useTodoStore = defineStore("todo", () => {
     if (element) {
       element.status = ItemStatusEnum.Done;
     }
+    localStorage.setItem("items", JSON.stringify(items.value));
   }
 
   return {
