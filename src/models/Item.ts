@@ -3,7 +3,7 @@ import { ItemStatusEnum } from "./ItemStatusEnum";
 export interface Item {
   id: number;
   description: string;
-  createdAt: Date;
+  createdAt: string;
   status: ItemStatusEnum;
   isArchived: boolean;
 }

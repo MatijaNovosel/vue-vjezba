@@ -23,12 +23,14 @@
           >
             {{ $t("buttons.done") }}
           </v-btn>
-          <v-btn color="primary" @click="state.showDialog = true">{{ $t("buttons.edit") }}</v-btn>
-          <AddEditItemDialog
+          <v-btn color="primary" @click="store.OpenAddEditDialog(true, item)">{{
+            $t("buttons.edit")
+          }}</v-btn>
+          <!--<AddEditItemDialog
             :showDialog="state.showDialog"
             :item="item"
             @close="state.showDialog = false"
-          ></AddEditItemDialog>
+          ></AddEditItemDialog>-->
         </v-card-actions>
       </div>
     </div>
@@ -37,7 +39,7 @@
 
 <script lang="ts">
 import { Item } from "@/models/Item";
-import { defineComponent, PropType, reactive } from "vue";
+import { computed, defineComponent, PropType } from "vue";
 import { ItemStatusEnum } from "@/models/ItemStatusEnum";
 import { useTodoStore } from "@/store";
 import AddEditItemDialog from "./AddEditItemDialog.vue";
@@ -54,17 +56,17 @@ export default defineComponent({
   setup(props) {
     const store = useTodoStore();
 
-    const daysAgo = Math.round(
-      Math.abs(new Date().getTime() - props.item.createdAt.getTime()) / (1000 * 3600 * 24)
+    const daysAgo = computed(() =>
+      Math.round(
+        Math.abs(new Date().getTime() - new Date(props.item.createdAt).getTime()) /
+          (1000 * 3600 * 24)
+      )
     );
-    const formattedDate =
-      props.item.createdAt.toLocaleDateString() + " " + props.item.createdAt.toLocaleTimeString();
+    const formattedDate = computed(() => new Date(props.item.createdAt).toLocaleString());
 
-    const state = reactive({ showDialog: false });
     return {
       ItemStatusEnum,
       store,
-      state,
       daysAgo,
       formattedDate
     };

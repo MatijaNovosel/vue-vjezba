@@ -1,12 +1,18 @@
 <template>
   <div class="text-center">
-    <v-dialog width="500" v-model="state.show" @click:outside="closeDialog()">
+    <v-dialog
+      width="500"
+      v-model="store.addEditItemDialogState.showDialog"
+      @click:outside="closeDialog"
+    >
       <v-card>
         <ValidationObserver v-slot="{ handleSubmit }" ref="addEditItemForm">
           <form @submit.prevent="handleSubmit(saveData)">
-            <v-card-title v-if="!isEditMode" class="text-h5 grey lighten-2">{{
-              $t("item.addItem")
-            }}</v-card-title>
+            <v-card-title
+              v-if="!store.addEditItemDialogState.isEditMode"
+              class="text-h5 grey lighten-2"
+              >{{ $t("item.addItem") }}</v-card-title
+            >
             <v-card-title v-else class="text-h5 grey lighten-2">{{
               $t("item.editItem")
             }}</v-card-title>
@@ -16,10 +22,11 @@
                   :label="$t('item.description')"
                   prepend-icon="mdi-clock-time-four-outline"
                   v-model="state.formData.description"
+                  :error-messages="errors"
+                  hide-details
                 ></v-text-field>
-                <span>{{ errors[0] }}</span>
               </ValidationProvider>
-              <template v-if="isEditMode">
+              <template v-if="store.addEditItemDialogState.isEditMode">
                 <v-radio-group row v-model="state.formData.status">
                   <v-radio :label="$t('item.active')" :value="status.Active"></v-radio>
                   <v-radio :label="$t('item.done')" :value="status.Done"></v-radio>
@@ -30,13 +37,11 @@
                 ></v-checkbox>
               </template>
             </v-card-text>
-
-            <v-divider></v-divider>
-
+            <v-divider />
             <v-card-actions>
-              <v-spacer></v-spacer>
+              <v-spacer />
               <v-btn color="primary" text type="submit">{{ $t("buttons.save") }}</v-btn>
-              <v-btn color="primary" text @click="closeDialog()">{{ $t("buttons.cancel") }}</v-btn>
+              <v-btn color="primary" text @click="closeDialog">{{ $t("buttons.cancel") }}</v-btn>
             </v-card-actions>
           </form>
         </ValidationObserver>
@@ -49,69 +54,68 @@
 import { Item } from "@/models/Item";
 import { ItemStatusEnum } from "@/models/ItemStatusEnum";
 import { useTodoStore } from "@/store";
-import { defineComponent, PropType, reactive, ref, watch } from "vue";
+import { defineComponent, reactive, ref, watch } from "vue";
 import { required } from "vee-validate/dist/rules";
 import { extend } from "vee-validate";
+import { randInt } from "@/helpers/helpers";
 extend("required", required);
 
+interface IForm {
+  reset: () => void;
+}
+
 export default defineComponent({
-  props: {
-    showDialog: Boolean,
-    item: {
-      type: Object as PropType<Item>,
-      required: false
-    }
-  },
   setup(props, context) {
-    const isEditMode: boolean = props.item !== undefined;
     const store = useTodoStore();
+
     const status = ItemStatusEnum;
     const state = reactive({
-      show: props.showDialog,
       formData: {
-        description: isEditMode ? (props.item?.description as string) : null,
-        status: isEditMode ? props.item?.status : null,
-        isArchived: isEditMode ? props.item?.isArchived : null
+        description: "",
+        status: ItemStatusEnum.Active,
+        isArchived: false
       }
     });
-    const addEditItemForm: any = ref(null);
+    const addEditItemForm = ref<IForm | null>(null);
 
     function closeDialog() {
-      state.show = false;
-      addEditItemForm.value.reset();
+      addEditItemForm.value?.reset();
+      state.formData.description = "";
+      state.formData.status = ItemStatusEnum.Active;
+      state.formData.isArchived = false;
       context.emit("close");
     }
 
     function saveData() {
-      if (!isEditMode) {
-        let element: Item = {
-          id: Math.random() * (9999 - 5) + 9999,
+      if (!store.addEditItemDialogState.isEditMode) {
+        const element: Item = {
+          id: randInt(),
           description: state.formData.description as string,
-          createdAt: new Date(),
+          createdAt: new Date().toISOString(),
           status: ItemStatusEnum.Active,
           isArchived: false
         };
-        state.formData.description = "";
         store.addItem(element);
       } else {
-        debugger;
-        let element: Item = {
-          id: props.item?.id as number,
+        const element: Item = {
+          id: store.addEditItemDialogState.item?.id as number,
           description: state.formData.description as string,
-          createdAt: props.item?.createdAt as Date,
-          status: state.formData.status as ItemStatusEnum,
-          isArchived: state.formData.isArchived as boolean
+          createdAt: store.addEditItemDialogState.item?.createdAt as string,
+          status: state.formData.status,
+          isArchived: state.formData.isArchived
         };
         store.updateItem(element);
       }
       closeDialog();
     }
 
-    watch(
-      () => props.showDialog,
-      (val) => (state.show = val)
-    );
-    return { state, isEditMode, status, addEditItemForm, closeDialog, saveData };
+    watch(store.addEditItemDialogState, (val) => {
+      state.formData.description = val.item?.description as string;
+      state.formData.isArchived = val.item?.isArchived as boolean;
+      state.formData.status = val.item?.status as number;
+    });
+
+    return { state, store, status, addEditItemForm, closeDialog, saveData };
   }
 });
 </script>

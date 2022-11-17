@@ -2,26 +2,25 @@
   <v-app>
     <v-app-bar app color="primary" dark>
       <v-spacer />
-      <div class="nav">
-        <v-text-field
-          style="height: 30px"
-          :label="$t('buttons.search')"
-          @input="debounceSearch"
-        />
-        <v-btn elevation="2" class="btn" @click="state.showDialog = true">
+      <div class="d-flex flex-gap-20">
+        <v-text-field hide-details :label="$t('buttons.search')" @input="debounceSearch" />
+        <v-btn elevation="2" class="btn" @click="store.OpenAddEditDialog(false)">
           {{ $t("item.addItem") }}
         </v-btn>
-        <AddEditItemDialog :showDialog="state.showDialog" @close="state.showDialog = false" />
-        <v-btn elevation="2" class="btn" @click="store.archiveAll()">
+        <AddEditItemDialog
+          :showDialog="store.addEditItemDialogState.showDialog"
+          @close="store.CloseAddEditDialog"
+        />
+        <v-btn elevation="2" class="btn" @click="store.archiveAll">
           {{ $t("buttons.archiveAll") }}
         </v-btn>
         <v-select
-          style="height: 30px; width: 150px"
+          hide-details
           :items="languages"
           item-value="locale"
           item-text="name"
           v-model="$i18n.locale"
-          :dense="true"
+          dense
           outlined
         />
       </div>
@@ -33,7 +32,7 @@
 </template>
 
 <script lang="ts">
-import { computed, defineComponent, reactive } from "vue";
+import { computed, defineComponent } from "vue";
 import Tabs from "./components/Tabs.vue";
 import { useTodoStore } from "@/store";
 import AddEditItemDialog from "./components/AddEditItemDialog.vue";
@@ -49,8 +48,6 @@ export default defineComponent({
 
   setup() {
     const store = useTodoStore();
-    const state = reactive({ showDialog: false });
-
     const languages = computed(() => [
       {
         locale: "en",
@@ -62,9 +59,9 @@ export default defineComponent({
       }
     ]);
 
-    let timeout: any = undefined;
+    let timeout: number | undefined = undefined;
 
-    const debounceSearch = (value: any) => {
+    const debounceSearch = (value: string) => {
       if (timeout) clearTimeout(timeout);
       timeout = setTimeout(() => {
         store.searchString = value;
@@ -73,17 +70,9 @@ export default defineComponent({
 
     return {
       store,
-      state,
       languages,
       debounceSearch
     };
   }
 });
 </script>
-
-<style scoped lang="scss">
-.nav {
-  display: flex;
-  gap: 20px;
-}
-</style>

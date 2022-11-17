@@ -1,5 +1,5 @@
 <template>
-  <div class="d-flex flex-shrink-1 flex-wrap justify-center p-a-3" style="gap: 15px">
+  <div class="d-flex flex-shrink-1 flex-wrap justify-center p-a-3 flex-gap-10">
     <ItemComponent v-for="(item, i) in filteredItems" :key="item.id" :item="item" />
   </div>
 </template>
