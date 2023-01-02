@@ -1,12 +1,18 @@
+<div align="center">
+  <img src="https://user-images.githubusercontent.com/36193643/205978239-f29e0f55-a561-4b90-931c-066045662f9b.png" />
+</div>
+
 <h1 align=center>Vue vježba</h1>
 <p align=center>Vježba za Vue 2/3.</p>
 
 ## 📑 Opis
-Potrebno je napraviti klasičnu "to-do" aplikaciju uz pomoć Vue gdje korisnik može dodati, brisati i uređivati svoje dnevne obveze. 
 
-Obavezno je koristiti [Vuetify](https://vuetifyjs.com/en/) za komponente uz Typescript i Vue 2 s `defineComponent` sintaksom. Sve napraviti na branchu `dev`.
+Potrebno je napraviti klasičnu "to-do" aplikaciju uz pomoć Vue gdje korisnik može dodati, brisati i uređivati svoje dnevne obveze.
+
+Obavezno je koristiti [Vuetify](https://vuetifyjs.com/en/) za komponente uz Typescript i Vue 3 sa `setup` sintaksom. Sve napraviti na branchu `dev`.
 
 ## ✏️ Zadaci
+
 - Napraviti jedan view gdje će se prikazati popis todo stavki koje korisnik mora obaviti i gdje može praviti sve operacije navedene u opisu
 - Podaci koji su bitni za stavku:
   - `description` opis stavke
@@ -24,7 +30,7 @@ Stavka bi trebala izgledati nalik ovome (pogledati ostale Vuetify komponente koj
 
 - Spomenuti view mora imati [Tabs](https://vuetifyjs.com/en/components/tabs/) komponentu kojom će se prikazivati ili obavljenje ili neobavljene stavke - tekst tabova mora biti "Active" i "Done"
 - Sadržaj tabova moraju biti popisi stavki i svaki tab mora biti jedna definirana ruta unutar vue routera, kao što je opisano [ovdje](https://vuetifyjs.com/en/api/v-tab/#props)
-- Todo stavke potrebno je čuvati u localStoragu i pristupati njima pomoću [VueX-a](https://vuex.vuejs.org/)
+- Todo stavke potrebno je čuvati u localStoragu i pristupati njima pomoću [Pinie](https://pinia.vuejs.org/)
 - Stavke je moguće pretraživati uz pomoć polja za pretragu koje se treba nalaziti u navigacijskoj traci (prilikom pretraga koristiti debouncing)
 - Stavke koje su obavljene moraju imati prekriženi tekst i nakon prelaska u "gotovo" stanje prikazati ih u tabu "Done"
 - Stavke je potrebno dodati uz pomoć [dijaloga](https://vuetifyjs.com/en/components/dialogs/) i potrebno je napraviti validaciju sadržaja koristeći [vee-validate](https://vee-validate.logaretm.com/v3/)
@@ -34,4 +40,5 @@ Stavka bi trebala izgledati nalik ovome (pogledati ostale Vuetify komponente koj
 - Napraviti rutu unutar koje će se prikazati arhiva stavki, klikom na stavku na tom ekranu vratiti će se u svoje pripadno stanje van iz arhive
 
 ## 🌍 Deployanje
+
 Nakon stvaranja aplikacije, deployati je na [Vercel](https://vercel.com/).
