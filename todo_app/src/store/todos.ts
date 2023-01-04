@@ -1,0 +1,43 @@
+import { RootState } from "./todos";
+import { TodoItem } from "@/models/TodoItem";
+import { defineStore } from "pinia";
+import { useStorage } from "@vueuse/core";
+
+export type RootState = {
+  todos: TodoItem[];
+};
+
+export const useTodoStore = defineStore({
+  id: "todoStore",
+  state: () =>
+    ({
+      todos: useStorage("todos", []),
+    } as RootState),
+  actions: {
+    createNewItem(item: TodoItem) {
+      if (!item) return;
+      this.todos.push(item);
+    },
+
+    //   updateItem(id: string, payload: TodoItem) {
+    //     if (!id || !payload) return;
+
+    //     const index = this.findIndexById(id);
+
+    //     if (index !== -1) {
+    //       this.items[index] = generateFakeData();
+    //     }
+    //   },
+
+    deleteItem(id: string) {
+      const targetTaskIndex:number = this.todos.findIndex((item) => item.id === id);
+
+      this.todos.splice(targetTaskIndex, 1);
+    },
+
+    finishTask(id: string) {
+      const targetTask:TodoItem = this.todos.find((item) => item.id === id);
+      targetTask.active = false;
+    },
+  },
+});
