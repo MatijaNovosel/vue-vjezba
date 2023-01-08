@@ -1,38 +1,38 @@
 <template>
-    <v-card variant="outlined" class="ma-2">
+    <v-card class="ma-2">
         <v-card-item>
             <div class="text-overline mb-1">
                 TO-DO Item
             </div>
-            <template v-if="listItem.active">
+            <template v-if="props.listItem.active">
                 <div class="text-h6 mb-1">
-                    {{ listItem.name }}
+                    {{ props.listItem.name }}
                 </div>
             </template>
             <template v-else>
                 <div class="text-h6 mb-1">
-                    <s>{{ listItem.name }}</s>
+                    <s>{{ props.listItem.name }}</s>
                 </div>
             </template>
             <div class="text-caption">
-                {{ listItem.description }}
+                {{ props.listItem.description }}
             </div>
             <div>
-                {{ listItem.createdAt }}
+                {{ props.listItem.createdAt }}
             </div>
         </v-card-item>
         <v-card-actions>
-            <template v-if="listItem.active">
-                <v-btn variant="outlined" @click="finishTask(listItem.id)">
-                Done
-            </v-btn>
+            <template v-if="props.listItem.active">
+                <v-btn variant="outlined" @click="finishTask(props.listItem.id)">
+                    Done
+                </v-btn>
             </template>
             <template v-else>
-                <v-btn variant="outlined" @click="deleteTask(listItem.id)">
-                Delete
-            </v-btn>
+                <v-btn variant="outlined" @click="deleteTask(props.listItem.id)">
+                    Delete
+                </v-btn>
             </template>
-            <v-btn variant="outlined">
+            <v-btn variant="outlined" @click="emit('updateTask', props.listItem.id)">
                 Edit
             </v-btn>
         </v-card-actions>
@@ -46,7 +46,13 @@ import { useTodoStore } from '@/store/todos';
 
 const store = useTodoStore();
 
-defineProps({
+const emit = defineEmits(["updateTask"]);
+
+const props = defineProps({
+    dialogValue: {
+        type: Boolean,
+        required: true
+    },
     listItem: {
         type: Object as PropType<TodoItem>,
         required: true
@@ -61,4 +67,7 @@ const deleteTask = (id: string) => {
     store.deleteItem(id)
     window.location.reload();
 }
+// const updateTask = () => {
+//     props.dialogValue = true;
+// }
 </script>

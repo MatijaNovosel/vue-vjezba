@@ -1,18 +1,13 @@
-import { RootState } from "./todos";
 import { TodoItem } from "@/models/TodoItem";
 import { defineStore } from "pinia";
 import { useStorage } from "@vueuse/core";
-
-export type RootState = {
-  todos: TodoItem[];
-};
 
 export const useTodoStore = defineStore({
   id: "todoStore",
   state: () =>
     ({
-      todos: useStorage("todos", []),
-    } as RootState),
+      todos: useStorage("todos", [] as TodoItem[]),
+    }),
   actions: {
     createNewItem(item: TodoItem) {
       if (!item) return;
@@ -36,6 +31,7 @@ export const useTodoStore = defineStore({
     },
 
     finishTask(id: string) {
+      //@ts-ignore
       const targetTask:TodoItem = this.todos.find((item) => item.id === id);
       targetTask.active = false;
     },

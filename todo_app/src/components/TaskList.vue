@@ -6,10 +6,10 @@
       <v-toolbar-title>TO-DO List</v-toolbar-title>
 
       <v-spacer></v-spacer>
-
-      <v-btn icon>
-        <v-icon>mdi-magnify</v-icon>
-      </v-btn>
+      <div class="w-25 px-15">
+        <v-text-field v-model="state.searchValue" v-on:input="filterSearch" class="mx-4" flat hide-details
+          label="Search" prepend-inner-icon="mdi-magnify" solo-inverted></v-text-field>
+      </div>
       <v-btn icon>
         <v-icon>mdi-dots-vertical</v-icon>
       </v-btn>
@@ -29,7 +29,7 @@
                 </v-btn>
               </div>
               <div class="mr-3 mt-3">
-                <NewTaskForm />
+                <new-task-form :dialog-value="state.dialog" />
               </div>
             </div>
           </div>
@@ -41,11 +41,11 @@
       <v-window-item v-for="(tabName, i) of state.tabs" :key="i">
         <template v-if="tabName == state.tabs[0]">
           <task-card v-for="item of state.activeTodoItems" :key="item.id" :list-item="item"
-            :item-description="item.description" />
+            :item-description="item.description" :dialog-value="state.dialog" @update-task="updateTask" />
         </template>
         <template v-else>
           <task-card v-for="item of state.doneTodoItems" :key="item.id" :list-item="item"
-            :item-description="item.description" />
+            :item-description="item.description" :dialog-value="state.dialog" @update-task="updateTask" />
         </template>
       </v-window-item>
     </v-window>
@@ -55,48 +55,20 @@
 <script lang="ts" setup>
 import { reactive } from 'vue';
 import { TodoItem } from "@/models/TodoItem";
+import { useTodoStore } from '@/store/todos';
+import _ from 'lodash'
 import TaskCard from './TaskCard.vue';
 import NewTaskForm from './NewTaskButton.vue';
-import { useTodoStore } from '@/store/todos';
+
 
 interface State {
   tab: null,
   tabs: string[],
   activeTodoItems: TodoItem[],
   doneTodoItems: TodoItem[],
-  showForm: boolean,
+  dialog: boolean,
+  searchValue: string
 }
-
-// const todoItems: TodoItem[] = [
-//   {
-//     id: "123",
-//     name: "test1",
-//     description: "test test test test",
-//     createdAt: new Date("11/11/22"),
-//     active: true
-//   },
-//   {
-//     id: "1234",
-//     name: "test2",
-//     description: "test test test test123",
-//     createdAt: new Date("11/11/22"),
-//     active: false
-//   },
-//   {
-//     id: "1235",
-//     name: "test3",
-//     description: "test test test test456 ",
-//     createdAt: new Date("11/11/22"),
-//     active: true
-//   },
-//   {
-//     id: "12356",
-//     name: "test3455",
-//     description: "test test testgdfdfgdf test456 ",
-//     createdAt: new Date("11/11/22"),
-//     active: false
-//   }
-// ]
 
 const todoStore = useTodoStore()
 
@@ -105,13 +77,25 @@ const state: State = reactive({
   tabs: ["Active", "Done"],
   activeTodoItems: todoStore.todos.length > 0 ? todoStore.todos.filter((item) => { return item.active === true }) : [],
   doneTodoItems: todoStore.todos.length > 0 ? todoStore.todos.filter((item) => { return item.active === false }) : [],
-  showForm: false
+  dialog: true,
+  searchValue: ""
 });
+
+const filterSearch =
+  _.debounce(() => {
+    state.activeTodoItems =state.activeTodoItems.filter((item) => {return item.name.includes(state.searchValue)});
+    state.doneTodoItems =state.doneTodoItems.filter((item) => {return item.name.includes(state.searchValue)});
+  }, 500);
 
 const delteAllTasks = () => {
   if (window.confirm('Are you sure you want to clear TO-DO List?')) {
     todoStore.todos = [];
     window.location.reload();
   }
+}
+
+const updateTask = (id: string) => {
+  state.dialog = true;
+  console.log(id);
 }
 </script>
