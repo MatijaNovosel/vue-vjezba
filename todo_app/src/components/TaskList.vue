@@ -3,16 +3,16 @@
     <v-toolbar color="primary">
       <v-app-bar-nav-icon></v-app-bar-nav-icon>
 
-      <v-toolbar-title>TO-DO List</v-toolbar-title>
+      <v-toolbar-title>{{ $t("appTitle") }}</v-toolbar-title>
 
       <v-spacer></v-spacer>
-      <div class="w-25 px-15">
-        <v-text-field v-model="state.searchValue" v-on:input="filterSearch" class="mx-4" flat hide-details
-          label="Search" prepend-inner-icon="mdi-magnify" solo-inverted></v-text-field>
+
+      <div class="d-flex justify-center align-center w-25">
+        <v-text-field v-model="state.searchValue" @keydown="search" class="mx-4" flat hide-details
+          :label="$t('searchBox')" prepend-inner-icon="mdi-magnify" solo-inverted></v-text-field>
+        <v-select prepend-inner-icon="mdi-earth" :label="$t('languages.label')" v-model="$i18n.locale" :items="['hr', 'en']" class="mt-5">
+        </v-select>
       </div>
-      <v-btn icon>
-        <v-icon>mdi-dots-vertical</v-icon>
-      </v-btn>
 
       <template v-slot:extension>
         <v-tabs v-model="state.tab" center class="w-100">
@@ -29,7 +29,7 @@
                 </v-btn>
               </div>
               <div class="mr-3 mt-3">
-                <new-task-form :dialog-value="state.dialog" />
+                <new-task-form />
               </div>
             </div>
           </div>
@@ -40,12 +40,12 @@
     <v-window v-model="state.tab">
       <v-window-item v-for="(tabName, i) of state.tabs" :key="i">
         <template v-if="tabName == state.tabs[0]">
-          <task-card v-for="item of state.activeTodoItems" :key="item.id" :list-item="item"
-            :item-description="item.description" :dialog-value="state.dialog" @update-task="updateTask" />
+          <task-card v-for="item of todoStore.activeTodos" :key="item.id" :list-item="item"
+            :item-description="item.description" />
         </template>
         <template v-else>
-          <task-card v-for="item of state.doneTodoItems" :key="item.id" :list-item="item"
-            :item-description="item.description" :dialog-value="state.dialog" @update-task="updateTask" />
+          <task-card v-for="item of todoStore.doneTodos" :key="item.id" :list-item="item"
+            :item-description="item.description" />
         </template>
       </v-window-item>
     </v-window>
@@ -53,49 +53,64 @@
 </template>
 
 <script lang="ts" setup>
-import { reactive } from 'vue';
+import { reactive, computed } from 'vue';
 import { TodoItem } from "@/models/TodoItem";
 import { useTodoStore } from '@/store/todos';
-import _ from 'lodash'
 import TaskCard from './TaskCard.vue';
 import NewTaskForm from './NewTaskButton.vue';
+import { useI18n } from 'vue-i18n'
 
+const { t } = useI18n();
 
 interface State {
   tab: null,
   tabs: string[],
-  activeTodoItems: TodoItem[],
-  doneTodoItems: TodoItem[],
-  dialog: boolean,
-  searchValue: string
+  searchValue: string,
 }
 
 const todoStore = useTodoStore()
 
 const state: State = reactive({
   tab: null,
-  tabs: ["Active", "Done"],
-  activeTodoItems: todoStore.todos.length > 0 ? todoStore.todos.filter((item) => { return item.active === true }) : [],
-  doneTodoItems: todoStore.todos.length > 0 ? todoStore.todos.filter((item) => { return item.active === false }) : [],
-  dialog: true,
+  tabs: [computed(() => t("tabNames.active")).value, computed(() => t("tabNames.done")).value],
   searchValue: ""
 });
 
-const filterSearch =
-  _.debounce(() => {
-    state.activeTodoItems =state.activeTodoItems.filter((item) => {return item.name.includes(state.searchValue)});
-    state.doneTodoItems =state.doneTodoItems.filter((item) => {return item.name.includes(state.searchValue)});
+
+const createDebounce = () => {
+  let timeout: ReturnType<typeof setTimeout>;
+  return function (fn: Function, delayMs: number) {
+    clearTimeout(timeout);
+    timeout = setTimeout(() => {
+      fn();
+    }, delayMs || 500);
+  };
+}
+
+const debounce = createDebounce()
+
+const filterSearchItems = (item: TodoItem[], active: boolean) => {
+  item = todoStore.todos.filter((item) => {
+    if (state.searchValue.length > 0) {
+      return item.name.includes(state.searchValue) && item.active === active
+    }
+    else {
+      return item.active === active
+    }
+  });
+  return item
+}
+
+const search = () =>
+  debounce(() => {
+    // state.activeTodoItems = filterSearchItems(state.activeTodoItems, true)
+    // state.doneTodoItems = filterSearchItems(state.doneTodoItems, false)
   }, 500);
 
 const delteAllTasks = () => {
   if (window.confirm('Are you sure you want to clear TO-DO List?')) {
-    todoStore.todos = [];
+    todoStore.archiveAllTodos();
     window.location.reload();
   }
-}
-
-const updateTask = (id: string) => {
-  state.dialog = true;
-  console.log(id);
 }
 </script>

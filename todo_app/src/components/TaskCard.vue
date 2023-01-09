@@ -2,7 +2,7 @@
     <v-card class="ma-2">
         <v-card-item>
             <div class="text-overline mb-1">
-                TO-DO Item
+                {{ $t("cardElements.cardName") }}
             </div>
             <template v-if="props.listItem.active">
                 <div class="text-h6 mb-1">
@@ -24,16 +24,16 @@
         <v-card-actions>
             <template v-if="props.listItem.active">
                 <v-btn variant="outlined" @click="finishTask(props.listItem.id)">
-                    Done
+                    {{ $t("cardElements.cardButtons.done") }}
                 </v-btn>
             </template>
             <template v-else>
                 <v-btn variant="outlined" @click="deleteTask(props.listItem.id)">
-                    Delete
+                    {{ $t("cardElements.cardButtons.delete") }}
                 </v-btn>
             </template>
-            <v-btn variant="outlined" @click="emit('updateTask', props.listItem.id)">
-                Edit
+            <v-btn variant="outlined">
+                {{ $t("cardElements.cardButtons.edit") }}
             </v-btn>
         </v-card-actions>
     </v-card>
@@ -46,13 +46,7 @@ import { useTodoStore } from '@/store/todos';
 
 const store = useTodoStore();
 
-const emit = defineEmits(["updateTask"]);
-
 const props = defineProps({
-    dialogValue: {
-        type: Boolean,
-        required: true
-    },
     listItem: {
         type: Object as PropType<TodoItem>,
         required: true
@@ -61,13 +55,9 @@ const props = defineProps({
 
 const finishTask = (id: string) => {
     store.finishTask(id)
-    window.location.reload();
 }
 const deleteTask = (id: string) => {
-    store.deleteItem(id)
+    // store.deleteItem(id)
     window.location.reload();
 }
-// const updateTask = () => {
-//     props.dialogValue = true;
-// }
 </script>

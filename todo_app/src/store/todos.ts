@@ -1,39 +1,77 @@
 import { TodoItem } from "@/models/TodoItem";
 import { defineStore } from "pinia";
-import { useStorage } from "@vueuse/core";
+import { ref, computed } from "vue";
+// import { useStorage } from "@vueuse/core";
 
-export const useTodoStore = defineStore({
-  id: "todoStore",
-  state: () =>
-    ({
-      todos: useStorage("todos", [] as TodoItem[]),
-    }),
-  actions: {
-    createNewItem(item: TodoItem) {
-      if (!item) return;
-      this.todos.push(item);
-    },
+export const useTodoStore = defineStore(
+  "todoStore",
+  () => {
+    const todos = ref([] as TodoItem[]);
+    const todosArchive = ref([] as TodoItem[]);
+    const openDialog = ref(false);
 
-    //   updateItem(id: string, payload: TodoItem) {
-    //     if (!id || !payload) return;
+    const activeTodos = computed(() => {
+      if (todos.value.length == 0) {
+        return [];
+      }
+      return todos.value.filter((item) => {
+        return item.active === true;
+      });
+    });
 
-    //     const index = this.findIndexById(id);
+    const doneTodos = computed(() => {
+      if (!todos.value) {
+        console.log("Empty")
+        return [];
+      }
+      return todos.value.filter((item) => {
+        return item.active === false;
+      });
+    });
 
-    //     if (index !== -1) {
-    //       this.items[index] = generateFakeData();
-    //     }
-    //   },
+    const createNewItem = (payload: TodoItem) => {
+      todos.value.push(payload);
+      console.log("create")
+    };
 
-    deleteItem(id: string) {
-      const targetTaskIndex:number = this.todos.findIndex((item) => item.id === id);
+    const getTaskById = (id: string) => {
+      return todos.value.find((item) => item.id === id);
+    };
 
-      this.todos.splice(targetTaskIndex, 1);
-    },
+    const finishTask = (id: string) => {
+      const targetTask = getTaskById(id);
+      if (targetTask) {
+        targetTask.active = false;
+      }
+    };
 
-    finishTask(id: string) {
-      //@ts-ignore
-      const targetTask:TodoItem = this.todos.find((item) => item.id === id);
-      targetTask.active = false;
-    },
+    const archiveAllTodos = () => {
+      todos.value.forEach((el) => {
+        todosArchive.value.push(el);
+      });
+      todos.value = [];
+    };
+
+    const handleDialog = () => {
+      openDialog.value = !openDialog.value
+    }
+
+    // const deleteItem = () => {};
+
+    return {
+      todos,
+      todosArchive,
+      activeTodos,
+      doneTodos,
+      openDialog,
+      createNewItem,
+      archiveAllTodos,
+      getTaskById,
+      finishTask,
+      handleDialog
+    };
   },
-});
+  {
+    persist: true,
+  }
+);
