@@ -18,7 +18,7 @@ Obavezno je koristiti [Vuetify](https://vuetifyjs.com/en/) za komponente uz Type
   - ~~`description` opis stavke~~
   - ~~`createdAt` datum kad je stvorena stavka, preporučljivo u ISO formatu~~
 
-Stavka bi trebala izgledati nalik ovome (pogledati ostale Vuetify komponente koje bi se mogle koristiti):
+~~Stavka bi trebala izgledati nalik ovome (pogledati ostale Vuetify komponente koje bi se mogle koristiti):~~
 
 ```
 ┌────────────────────────────────────────────────────────────┐
@@ -37,7 +37,7 @@ Stavka bi trebala izgledati nalik ovome (pogledati ostale Vuetify komponente koj
 - Isti taj dijalog koristiti za uređivanje stavki
 - ~~Dodati prijevod na aplikaciju uz pomoć [i18n](https://kazupon.github.io/vue-i18n/), za engleski i hrvatski jezik te klikom na gumb prebaciti iz jednog u drugo ili obratno~~
 - ~~Napraviti gumb koji će obrisati sve stavke i u staviti ih u arhivu - i one koje su done ili active, a nalazi se na navigacijskoj traci~~
-- Napraviti rutu unutar koje će se prikazati arhiva stavki, klikom na stavku na tom ekranu vratiti će se u svoje pripadno stanje van iz arhive
+- ~~Napraviti rutu unutar koje će se prikazati arhiva stavki, klikom na stavku na tom ekranu vratiti će se u svoje pripadno stanje van iz arhive~~
 
 ## 🌍 Deployanje
 
