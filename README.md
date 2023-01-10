@@ -13,10 +13,10 @@ Obavezno je koristiti [Vuetify](https://vuetifyjs.com/en/) za komponente uz Type
 
 ## ✏️ Zadaci
 
-- Napraviti jedan view gdje će se prikazati popis todo stavki koje korisnik mora obaviti i gdje može praviti sve operacije navedene u opisu
-- Podaci koji su bitni za stavku:
-  - `description` opis stavke
-  - `createdAt` datum kad je stvorena stavka, preporučljivo u ISO formatu
+- ~~Napraviti jedan view gdje će se prikazati popis todo stavki koje korisnik mora obaviti i gdje može praviti sve operacije navedene u opisu~~
+- ~~Podaci koji su bitni za stavku:~~
+  - ~~`description` opis stavke~~
+  - ~~`createdAt` datum kad je stvorena stavka, preporučljivo u ISO formatu~~
 
 Stavka bi trebala izgledati nalik ovome (pogledati ostale Vuetify komponente koje bi se mogle koristiti):
 
