@@ -28,7 +28,7 @@ Stavka bi trebala izgledati nalik ovome (pogledati ostale Vuetify komponente koj
 └────────────────────────────────────────────────────────────┘
 ```
 
-- ~~Spomenuti view mora imati [Tabs](https://vuetifyjs.com/en/components/tabs/) komponentu kojom će se prikazivati ili obavljenje ili neobavljene stavke - tekst tabova mora biti "Active" i "Done"
+- ~~Spomenuti view mora imati [Tabs](https://vuetifyjs.com/en/components/tabs/) komponentu kojom će se prikazivati ili obavljenje ili neobavljene stavke - tekst tabova mora biti "Active" i "Done"~~
 - Sadržaj tabova moraju biti popisi stavki i svaki tab mora biti jedna definirana ruta unutar vue routera, kao što je opisano [ovdje](https://vuetifyjs.com/en/api/v-tab/#props)
 - ~~Todo stavke potrebno je čuvati u localStoragu i pristupati njima pomoću [Pinie](https://pinia.vuejs.org/)
 - ~~Stavke je moguće pretraživati uz pomoć polja za pretragu koje se treba nalaziti u navigacijskoj traci (prilikom pretraga koristiti debouncing)
