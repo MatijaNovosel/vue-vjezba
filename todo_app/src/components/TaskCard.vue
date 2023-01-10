@@ -22,19 +22,29 @@
             </div>
         </v-card-item>
         <v-card-actions>
-            <template v-if="props.listItem.active">
-                <v-btn variant="outlined" @click="finishTask(props.listItem.id)">
-                    {{ $t("cardElements.cardButtons.done") }}
+            <template v-if="store.todosArchive.includes(props.listItem)">
+                <v-btn variant="outlined" @click="restoreTask(props.listItem.id)">
+                    {{ $t("cardElements.cardButtons.restore") }}
                 </v-btn>
-            </template>
-            <template v-else>
                 <v-btn variant="outlined" @click="deleteTask(props.listItem.id)">
                     {{ $t("cardElements.cardButtons.delete") }}
                 </v-btn>
             </template>
-            <v-btn variant="outlined">
-                {{ $t("cardElements.cardButtons.edit") }}
-            </v-btn>
+            <template v-else>
+                <template v-if="props.listItem.active">
+                    <v-btn variant="outlined" @click="finishTask(props.listItem.id)">
+                        {{ $t("cardElements.cardButtons.done") }}
+                    </v-btn>
+                </template>
+                <template v-else>
+                    <v-btn variant="outlined" @click="archiveTask(props.listItem.id)">
+                        {{ $t("cardElements.cardButtons.arhive") }}
+                    </v-btn>
+                </template>
+                <v-btn variant="outlined" @click="editTask(props.listItem.id)">
+                    {{ $t("cardElements.cardButtons.edit") }}
+                </v-btn>
+            </template>
         </v-card-actions>
     </v-card>
 </template>
@@ -43,8 +53,8 @@
 import { TodoItem } from '@/models/TodoItem';
 import { PropType } from 'vue';
 import { useTodoStore } from '@/store/todos';
-
-const store = useTodoStore();
+import { storeToRefs } from "pinia";
+import { useI18n } from 'vue-i18n'
 
 const props = defineProps({
     listItem: {
@@ -53,11 +63,29 @@ const props = defineProps({
     }
 })
 
+const store = useTodoStore();
+
+const { t } = useI18n();
+
+const { showDialogEditElements, selectedTodo } = storeToRefs(store);
+
 const finishTask = (id: string) => {
     store.finishTask(id)
 }
+const editTask = (id: string) => {
+    showDialogEditElements.value = true;
+    selectedTodo.value = store.getTaskById(id)
+    store.handleDialog()
+}
+const archiveTask = (id: string) => {
+    store.archiveSingleTodo(id)
+}
+const restoreTask = (id: string) => {
+    store.restoreTodoFromArchive(id)
+}
 const deleteTask = (id: string) => {
-    // store.deleteItem(id)
-    window.location.reload();
+    if (window.confirm(t("formQuestion.deleteFromArchive"))) {
+        store.deleteTodoFromArhive(id)
+    }
 }
 </script>

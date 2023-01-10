@@ -3,6 +3,8 @@ export default {
   tabNames: {
     active: "Active",
     done: "Done",
+    archive: "Archive",
+    searchResult: "Search Result",
   },
   cardElements: {
     cardName: "TO-DO Item",
@@ -10,6 +12,8 @@ export default {
       done: "Done",
       edit: "Edit",
       delete: "Delete",
+      arhive: "Archive",
+      restore: "Restore",
     },
   },
   formElements: {
@@ -25,9 +29,13 @@ export default {
     },
   },
   searchBox: "Search",
-  languages:{
+  formQuestion: {
+    deleteFromArchive: "Are you sure you want to permanently delete task?",
+    archiveAllTasks: "Are you sure you want to archive TO-DO Tasks?",
+  },
+  languages: {
     english: "English",
     croatian: "Croatian",
-    label: "Language"
-  }
+    label: "Language",
+  },
 };

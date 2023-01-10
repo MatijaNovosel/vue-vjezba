@@ -3,6 +3,8 @@ export default {
   tabNames: {
     active: "U tijeku",
     done: "Završeno",
+    archive: "Arhiva",
+    searchResult: "Pretraga",
   },
   cardElements: {
     cardName: "TO-DO Stavka",
@@ -10,6 +12,8 @@ export default {
       done: "Završi",
       edit: "Promijeni",
       delete: "Izbriši",
+      arhive: "Arhiviraj",
+      restore: "Vrati",
     },
   },
   formElements: {
@@ -24,11 +28,14 @@ export default {
       active: "U tijeku",
     },
   },
-  
   searchBox: "Traži",
-  languages:{
+  formQuestion: {
+    deleteFromArchive: "Želite li trajno izbrisati stavku?",
+    archiveAllTasks: "Želite li arhivirati sve stavke?",
+  },
+  languages: {
     english: "Engleski",
     croatian: "Hrvatski",
-    label: "Jezik"
-  }
+    label: "Jezik",
+  },
 };
