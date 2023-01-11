@@ -5,6 +5,8 @@ import vuetify, { transformAssetUrls } from 'vite-plugin-vuetify'
 // Utilities
 import { defineConfig } from 'vite'
 import { fileURLToPath, URL } from 'node:url'
+import VueI18nPlugin from '@intlify/unplugin-vue-i18n/vite'
+import { resolve, dirname } from 'node:path'
 
 // https://vitejs.dev/config/
 export default defineConfig({
@@ -19,6 +21,9 @@ export default defineConfig({
         configFile: 'src/styles/settings.scss',
       },
     }),
+    VueI18nPlugin({
+      include: resolve(dirname(fileURLToPath(import.meta.url)), './path/to/src/locales/**')
+    })
   ],
   define: { 'process.env': {} },
   resolve: {

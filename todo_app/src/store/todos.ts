@@ -111,6 +111,10 @@ export const useTodoStore = defineStore(
         }).value
     };
 
+    const findTargetTodoForEdit = (id: string) => {
+      selectedTodo.value = JSON.parse(JSON.stringify(getTaskById(id)));
+    }
+
     return {
       todos,
       todosArchive,
@@ -130,7 +134,8 @@ export const useTodoStore = defineStore(
       getTaskByIdFromArchive,
       finishTask,
       handleDialog,
-      filterTodos
+      filterTodos,
+      findTargetTodoForEdit
     };
   },
   {

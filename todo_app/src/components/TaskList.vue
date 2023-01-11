@@ -1,14 +1,14 @@
 <template>
   <v-card class="pa-1">
     <v-toolbar color="primary">
-      <v-app-bar-nav-icon></v-app-bar-nav-icon>
       <v-toolbar-title>{{ $t("appTitle") }}</v-toolbar-title>
       <v-spacer></v-spacer>
       <div class="d-flex justify-center align-center w-25">
         <v-text-field v-model="state.searchValue" @keydown="search" @click:clear="search" class="mx-4" flat hide-details
           :label="$t('searchBox')" prepend-inner-icon="mdi-magnify" solo-inverted clearable></v-text-field>
         <v-select prepend-inner-icon="mdi-earth" :label="$t('languages.label')" v-model="$i18n.locale"
-          :items="['hr', 'en']" class="mt-5">
+          :items="[{ displaytext: $t('languages.croatian'), value: 'hr' }, { displaytext: $t('languages.english'), value: 'en' }]"
+          item-value="value" item-title="displaytext" class="mt-5">
         </v-select>
       </div>
       <template v-slot:extension>
@@ -30,13 +30,16 @@
                 </v-tab>
               </template>
             </div>
-            <div class="d-flex flex-row justify-center align-start">
-              <div class="mr-3">
+            <div class="d-flex flex-row justify-center align-start mr-3">
+              <div>
                 <v-btn @click="ArchiveAllTasks" icon>
                   <v-icon>mdi-close-thick</v-icon>
                 </v-btn>
               </div>
-              <div class="mr-3 mt-3">
+              <div>
+                <v-btn @click="todoStore.handleDialog" icon>
+                  <v-icon>mdi-table-large-plus</v-icon>
+                </v-btn>
                 <new-task-form />
               </div>
             </div>
@@ -65,7 +68,7 @@
 </template>
 
 <script lang="ts" setup>
-import { reactive, computed } from 'vue';
+import { reactive } from 'vue';
 import { useTodoStore } from '@/store/todos';
 import TaskCard from './TaskCard.vue';
 import NewTaskForm from './NewTaskButton.vue';

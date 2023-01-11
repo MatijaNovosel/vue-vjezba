@@ -74,7 +74,7 @@ const finishTask = (id: string) => {
 }
 const editTask = (id: string) => {
     showDialogEditElements.value = true;
-    selectedTodo.value = store.getTaskById(id)
+    store.findTargetTodoForEdit(id)
     store.handleDialog()
 }
 const archiveTask = (id: string) => {
