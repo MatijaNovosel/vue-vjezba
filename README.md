@@ -35,9 +35,9 @@ Stavka bi trebala izgledati nalik ovome (pogledati ostale Vuetify komponente koj
 - Stavke je moguće pretraživati uz pomoć polja za pretragu koje se treba nalaziti u navigacijskoj traci (prilikom pretraga koristiti debouncing)
 - Stavke koje su obavljene moraju imati prekriženi tekst i nakon prelaska u "gotovo" stanje prikazati ih u tabu "Done"
 - Stavke je potrebno dodati uz pomoć [dijaloga](https://vuetifyjs.com/en/components/dialogs/) i potrebno je napraviti validaciju sadržaja koristeći [vee-validate](https://vee-validate.logaretm.com/v4/)
-- Isti taj dijalog koristiti za uređivanje stavki
+- Isti taj dijalog koristiti za uređivanje stavki (razmisliti o tome gdje držati podatke o odabranoj stavci)
 - Dodati prijevod na aplikaciju uz pomoć [i18n](https://kazupon.github.io/vue-i18n/), za engleski i hrvatski jezik te klikom na gumb prebaciti iz jednog u drugo ili obratno
-- Napraviti gumb koji će obrisati sve stavke i u staviti ih u arhivu - ovisno o tabu koji je odabran, a nalazi se na prvom viewu gdje su ili aktivne ili neaktivne stavke
+- Napraviti gumb koji će obrisati sve stavke i u staviti ih u arhivu - ovisno o tabu koji je odabran, a nalazi se na prvom viewu gdje su ili aktivne ili neaktivne stavke, tu akciju treba potvrditi posebnim dijalogom gdje su jedine opcije `Yes` ili `No`
 - Napraviti rutu unutar koje će se prikazati arhiva stavki, klikom na stavku na tom ekranu vratiti će se u svoje pripadno stanje van iz arhive
 - Većinu logike s operacijama nad stavkama bi trebala biti obavljena unutar stora
 
