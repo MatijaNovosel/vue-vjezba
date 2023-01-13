@@ -17,6 +17,7 @@ Za općenite upute oko toga kako pisati Vue kod, pratiti [ovo](https://github.co
 
 ## ✏️ Zadaci
 
+- Aplikacija bi trebala imati navigacijsku traku s par gumbova koji vode na dva viewa: onaj za aktivne i neaktivne to-do stavke i arhivirane stavke
 - Napraviti jedan view gdje će se prikazati popis todo stavki koje korisnik mora obaviti i gdje može praviti sve operacije navedene u opisu
 - Podaci koji su bitni za stavku:
   - `description` opis stavke
