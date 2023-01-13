@@ -29,9 +29,13 @@ export default {
     },
   },
   searchBox: "Traži",
-  formQuestion: {
+  dialogQuestion: {
     deleteFromArchive: "Želite li trajno izbrisati stavku?",
     archiveAllTasks: "Želite li arhivirati sve stavke?",
+  },
+  dialogAnswers: {
+    yes: "Da",
+    no: "Ne"
   },
   languages: {
     english: "Engleski",

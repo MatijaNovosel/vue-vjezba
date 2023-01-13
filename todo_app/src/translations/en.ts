@@ -29,9 +29,13 @@ export default {
     },
   },
   searchBox: "Search",
-  formQuestion: {
+  dialogQuestion: {
     deleteFromArchive: "Are you sure you want to permanently delete task?",
     archiveAllTasks: "Are you sure you want to archive TO-DO Tasks?",
+  },
+  dialogAnswers: {
+    yes: "Yes",
+    no: "No"
   },
   languages: {
     english: "English",

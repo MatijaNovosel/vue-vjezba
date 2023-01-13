@@ -3,5 +3,6 @@ export interface TodoItem {
   name: string;
   description?: string;
   createdAt: string;
-  active: Boolean
+  active: boolean;
+  isArchived: boolean;
 }

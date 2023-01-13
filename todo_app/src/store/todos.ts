@@ -1,32 +1,29 @@
 import { TodoItem } from "@/models/TodoItem";
 import { defineStore } from "pinia";
-import { ref, computed } from "vue";
+import { computed, ref } from "vue";
+import { useRoute } from "vue-router";
 
 export const useTodoStore = defineStore(
   "todoStore",
   () => {
-    const todos = ref([] as TodoItem[]);
-    const todosArchive = ref([] as TodoItem[]);
-    const filteredTodos = ref([] as TodoItem[]);
-    const selectedTodo = ref({} as TodoItem);
+    const todos = ref<TodoItem[]>([]);
+    const selectedTodo = ref<TodoItem>({} as TodoItem);
     const openDialog = ref(false);
     const showDialogEditElements = ref(false);
+    const searchValue = ref("");
+    const route = useRoute();
 
-    const activeTodos = computed(() => {
-      if (todos.value.length == 0) {
-        return [];
-      }
-      return todos.value.filter((item) => {
-        return item.active === true;
-      });
-    });
+    const showTodoItems = computed(() => {
+      const { state } = route.params;
+      const showArchivedTasks = state === "archived";
+      const showActiveTasks = state === "active";
 
-    const doneTodos = computed(() => {
-      if (!todos.value) {
-        return [];
-      }
       return todos.value.filter((item) => {
-        return item.active === false;
+        return showArchivedTasks
+          ? item.isArchived
+          : showActiveTasks
+          ? item.active && !item.isArchived
+          : !item.active && !item.isArchived;
       });
     });
 
@@ -35,12 +32,9 @@ export const useTodoStore = defineStore(
     };
 
     const getTaskById = (id: string) => {
-      const task = todos.value.find((item) => item.id === id) || {} as TodoItem;
+      const task =
+        todos.value.find((item) => item.id === id) || ({} as TodoItem);
       return task;
-    };
-
-    const getTaskByIdFromArchive = (id: string) => {
-      return todosArchive.value.find((item) => item.id === id) || {} as TodoItem;
     };
 
     const finishTask = (id: string) => {
@@ -52,7 +46,7 @@ export const useTodoStore = defineStore(
 
     const editTask = (item: TodoItem) => {
       const targetTask = getTaskById(item.id);
-      if(targetTask){
+      if (targetTask) {
         const targetTaskIndex = todos.value.indexOf(targetTask);
         if (targetTaskIndex > -1) {
           todos.value[targetTaskIndex] = item;
@@ -61,41 +55,29 @@ export const useTodoStore = defineStore(
     };
 
     const archiveAllTodos = () => {
-      todos.value.forEach((el) => {
-        todosArchive.value.push(el);
+      todos.value.forEach((todo) => {
+        todo.isArchived = true;
       });
-      todos.value = [];
     };
 
     const archiveSingleTodo = (id: string) => {
       const targetTask = getTaskById(id);
       if (targetTask) {
-        todosArchive.value.push(targetTask);
-        const targetTaskIndex = todos.value.indexOf(targetTask);
-        if (targetTaskIndex > -1) {
-          todos.value.splice(targetTaskIndex, 1);
-        }
+        targetTask.isArchived = true;
       }
     };
 
     const deleteTodoFromArhive = (id: string) => {
-      const targetTask = getTaskByIdFromArchive(id);
-      if (targetTask) {
-        const targetTaskIndex = todosArchive.value.indexOf(targetTask);
-        if (targetTaskIndex > -1) {
-          todosArchive.value.splice(targetTaskIndex, 1);
-        }
+      const targetTaskIndex = todos.value.findIndex((todo) => todo.id === id);
+      if (targetTaskIndex > -1) {
+        todos.value.splice(targetTaskIndex, 1);
       }
     };
 
     const restoreTodoFromArchive = (id: string) => {
-      const targetTask = getTaskByIdFromArchive(id);
+      const targetTask = getTaskById(id);
       if (targetTask) {
-        todos.value.push(targetTask);
-        const targetTaskIndex = todosArchive.value.indexOf(targetTask);
-        if (targetTaskIndex > -1) {
-          todosArchive.value.splice(targetTaskIndex, 1);
-        }
+        targetTask.isArchived = false;
       }
     };
 
@@ -103,39 +85,26 @@ export const useTodoStore = defineStore(
       openDialog.value = !openDialog.value;
     };
 
-    const filterTodos = (searchParam: string) => {
-        filteredTodos.value = computed(()=>{
-          return todos.value.filter((item) => {
-            return item.name.includes(searchParam);
-          });
-        }).value
-    };
-
-    const findTargetTodoForEdit = (id: string) => {
+    const copySelectedTask = (id: string) => {
       selectedTodo.value = JSON.parse(JSON.stringify(getTaskById(id)));
-    }
+    };
 
     return {
       todos,
-      todosArchive,
-      activeTodos,
       selectedTodo,
-      doneTodos,
-      filteredTodos,
       openDialog,
       showDialogEditElements,
+      searchValue,
+      showTodoItems,
       createTask,
       editTask,
       archiveAllTodos,
       archiveSingleTodo,
       deleteTodoFromArhive,
       restoreTodoFromArchive,
-      getTaskById,
-      getTaskByIdFromArchive,
       finishTask,
       handleDialog,
-      filterTodos,
-      findTargetTodoForEdit
+      copySelectedTask,
     };
   },
   {

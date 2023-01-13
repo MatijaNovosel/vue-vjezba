@@ -2,33 +2,28 @@
   <v-card class="pa-1">
     <v-toolbar color="primary">
       <v-toolbar-title>{{ $t("appTitle") }}</v-toolbar-title>
-      <v-spacer></v-spacer>
+      <v-spacer />
       <div class="d-flex justify-center align-center w-25">
-        <v-text-field v-model="state.searchValue" @keydown="search" @click:clear="search" class="mx-4" flat hide-details
-          :label="$t('searchBox')" prepend-inner-icon="mdi-magnify" solo-inverted clearable></v-text-field>
+        <v-text-field class="mx-4" flat hide-details solo-inverted clearable v-model="state.searchInput"
+          @keydown="onSearch" @click:clear="onSearch" :label="$t('searchBox')" prepend-inner-icon="mdi-magnify" />
+
         <v-select prepend-inner-icon="mdi-earth" :label="$t('languages.label')" v-model="$i18n.locale"
-          :items="[{ displaytext: $t('languages.croatian'), value: 'hr' }, { displaytext: $t('languages.english'), value: 'en' }]"
-          item-value="value" item-title="displaytext" class="mt-5">
+          :items="languages" item-value="value" item-title="displaytext" class="mt-5">
         </v-select>
       </div>
-      <template v-slot:extension>
-        <v-tabs v-model="state.tab" center class="w-100">
+      <template #extension>
+        <v-tabs center class="w-100">
           <div class="d-flex flex-row w-100 justify-space-between">
             <div>
-              <v-tab>
+              <v-tab :to="{ name: ROUTE_NAMES.TASKS, params: { state: 'active' } }">
                 {{ $t("tabNames.active") }}
               </v-tab>
-              <v-tab>
+              <v-tab :to="{ name: ROUTE_NAMES.TASKS, params: { state: 'done' } }">
                 {{ $t("tabNames.done") }}
               </v-tab>
-              <v-tab>
+              <v-tab :to="{ name: ROUTE_NAMES.TASKS, params: { state: 'archived' } }">
                 {{ $t("tabNames.archive") }}
               </v-tab>
-              <template v-if="state.searchValue">
-                <v-tab>
-                  {{ $t("tabNames.searchResult") }}
-                </v-tab>
-              </template>
             </div>
             <div class="d-flex flex-row justify-center align-start mr-3">
               <div>
@@ -37,7 +32,7 @@
                 </v-btn>
               </div>
               <div>
-                <v-btn @click="todoStore.handleDialog" icon>
+                <v-btn @click="store.handleDialog" icon>
                   <v-icon>mdi-table-large-plus</v-icon>
                 </v-btn>
                 <new-task-form />
@@ -47,75 +42,54 @@
         </v-tabs>
       </template>
     </v-toolbar>
-    <v-window v-model="state.tab">
-      <v-window-item>
-        <task-card v-for="item of activeTodos" :key="item.id" :list-item="item" :item-description="item.description" />
-      </v-window-item>
-      <v-window-item>
-        <task-card v-for="item of doneTodos" :key="item.id" :list-item="item" :item-description="item.description" />
-      </v-window-item>
-      <v-window-item>
-        <task-card v-for="item of todosArchive" :key="item.id" :list-item="item" :item-description="item.description" />
-      </v-window-item>
-      <template v-if="state.searchValue">
-        <v-window-item>
-          <task-card v-for="item of filteredTodos" :key="item.id" :list-item="item"
-            :item-description="item.description" />
-        </v-window-item>
-      </template>
+    <v-window>
+      <router-view />
     </v-window>
   </v-card>
 </template>
 
 <script lang="ts" setup>
-import { reactive } from 'vue';
+import ROUTE_NAMES from '@/router/routeNames';
 import { useTodoStore } from '@/store/todos';
-import TaskCard from './TaskCard.vue';
-import NewTaskForm from './NewTaskButton.vue';
+import dialog from '@/utils/dialog';
+import { createDebounce } from '@/utils/helpers';
 import { storeToRefs } from "pinia";
-import { useI18n } from 'vue-i18n'
+import { computed, reactive } from 'vue';
+import { useI18n } from 'vue-i18n';
+import NewTaskForm from './TaskActionDialog.vue';
 
 interface State {
-  tab: number,
-  searchValue: string,
+  searchInput: string
 }
 
-const todoStore = useTodoStore()
+const state: State = reactive({
+  searchInput: ""
+})
+
+const store = useTodoStore()
+
+const { searchValue } = storeToRefs(store);
 
 const { t } = useI18n();
 
-const state: State = reactive({
-  tab: 0,
-  searchValue: ''
-});
+const debounce = createDebounce();
 
-const { todosArchive, doneTodos, activeTodos, filteredTodos } = storeToRefs(todoStore);
+const languages = computed(() => {
+  return [{ displaytext: t('languages.croatian'), value: 'hr' }, { displaytext: t('languages.english'), value: 'en' }]
+})
 
-const createDebounce = () => {
-  let timeout: ReturnType<typeof setTimeout>;
-  return function (fn: Function, delayMs: number) {
-    clearTimeout(timeout);
-    timeout = setTimeout(() => {
-      fn();
-    }, delayMs || 500);
-  };
+const onSearch = () => {
+  debounce(() => {
+    searchValue.value = state.searchInput
+  }, 500)
 }
 
-const debounce = createDebounce()
+const ArchiveAllTasks = async () => {
+  const dialogResult = await dialog.okText(t("dialogAnswers.yes")).cancelText(t("dialogAnswers.no")).confirm(t("dialogQuestion.archiveAllTasks"))
+  if (dialogResult) {
+    store.archiveAllTodos();
 
-const search = () =>
-  debounce(() => {
-    if (!state.searchValue) {
-      state.tab = 0;
-      return;
-    }
-    state.tab = 3;
-    todoStore.filterTodos(state.searchValue)
-  }, 500);
-
-const ArchiveAllTasks = () => {
-  if (window.confirm(t("formQuestion.archiveAllTasks"))) {
-    todoStore.archiveAllTodos();
   }
 }
+
 </script>
