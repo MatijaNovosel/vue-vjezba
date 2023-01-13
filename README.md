@@ -13,6 +13,8 @@ Koristiti [Vuetify](https://next.vuetifyjs.com/en/getting-started/installation/)
 
 **Obavezno** odabrati `Essentials` opciju prilikom stvaranja projekta, `Yes` na izboru za TypeScript i `npm` kao package manager.
 
+Za općenite upute oko toga kako pisati Vue kod, pratiti [ovo](https://github.com/MatijaNovosel/vue-best-practice).
+
 ## ✏️ Zadaci
 
 - Napraviti jedan view gdje će se prikazati popis todo stavki koje korisnik mora obaviti i gdje može praviti sve operacije navedene u opisu
