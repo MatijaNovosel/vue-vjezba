@@ -42,7 +42,7 @@ Stavka bi trebala izgledati nalik ovome (pogledati ostale Vuetify komponente koj
 - Isti taj dijalog koristiti za uređivanje stavki (razmisliti o tome gdje držati podatke o odabranoj stavci)
 - Dodati prijevod na aplikaciju uz pomoć [i18n](https://kazupon.github.io/vue-i18n/), za engleski i hrvatski jezik te klikom na gumb prebaciti iz jednog u drugo ili obratno
 - Napraviti gumb koji će obrisati sve stavke i u staviti ih u arhivu - ovisno o tabu koji je odabran, a nalazi se na prvom viewu gdje su ili aktivne ili neaktivne stavke, tu akciju treba potvrditi posebnim dijalogom gdje su jedine opcije `Yes` ili `No`
-- Napraviti rutu unutar koje će se prikazati arhiva stavki, klikom na stavku na tom ekranu vratiti će se u svoje pripadno stanje van iz arhive
+- Napraviti rutu unutar koje će se prikazati arhiva stavki, klikom na gumb na toj stavci na tom ekranu vratiti će se u svoje pripadno stanje van iz arhive
 - Većinu logike s operacijama nad stavkama bi trebala biti obavljena unutar stora
 - Stavke u arhivi i u neaktivnom stanju je nemoguće uređivati, samo one koje su aktivne
 
