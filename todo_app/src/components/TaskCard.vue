@@ -51,11 +51,11 @@
 
 <script setup lang="ts">
 import { TodoItem } from '@/models/TodoItem';
-import { PropType } from 'vue';
 import { useTodoStore } from '@/store/todos';
-import { storeToRefs } from "pinia";
-import { useI18n } from 'vue-i18n'
 import dialog from '@/utils/dialog';
+import { storeToRefs } from "pinia";
+import { PropType } from 'vue';
+import { useI18n } from 'vue-i18n';
 
 defineProps({
     listItem: {

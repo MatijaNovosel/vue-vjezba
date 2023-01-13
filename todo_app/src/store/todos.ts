@@ -19,11 +19,14 @@ export const useTodoStore = defineStore(
       const showActiveTasks = state === "active";
 
       return todos.value.filter((item) => {
+        const searchInputExist = searchValue.value
+          ? item.name.includes(searchValue.value)
+          : true;
         return showArchivedTasks
-          ? item.isArchived
+          ? item.isArchived && searchInputExist
           : showActiveTasks
-          ? item.active && !item.isArchived
-          : !item.active && !item.isArchived;
+          ? item.active && !item.isArchived && searchInputExist
+          : !item.active && !item.isArchived && searchInputExist;
       });
     });
 

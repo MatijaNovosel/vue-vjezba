@@ -26,7 +26,11 @@ const generateUniqueId = (existingListOfTasks: TodoItem[]) => {
 
 const getCurrentDateInCustomFormat = () => {
   const today = new Date();
-  return  `${today.getDate()}/${today.getMonth() + 1}/${today.getFullYear()} ${today.getHours().toString().length > 1 ? "" : "0"}${today.getHours()}:${today.getMinutes().toString().length > 1 ? "" : "0"}${today.getMinutes()}`;
+  return `${today.getDate()}/${today.getMonth() + 1}/${today.getFullYear()} ${
+    today.getHours().toString().length > 1 ? "" : "0"
+  }${today.getHours()}:${
+    today.getMinutes().toString().length > 1 ? "" : "0"
+  }${today.getMinutes()}`;
 };
 
 export { createDebounce, generateUniqueId, getCurrentDateInCustomFormat };

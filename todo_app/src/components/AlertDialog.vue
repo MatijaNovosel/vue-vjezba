@@ -4,7 +4,7 @@
             <v-card>
                 <v-card-text>{{ dialog.state.message }}</v-card-text>
                 <v-card-actions>
-                    <v-spacer/>
+                    <v-spacer />
                     <v-btn color="green-darken-1" @click="dialog.ok" variant="text">
                         {{ dialog.state.okText }}
                     </v-btn>

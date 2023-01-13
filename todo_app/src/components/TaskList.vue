@@ -4,12 +4,11 @@
       <v-toolbar-title>{{ $t("appTitle") }}</v-toolbar-title>
       <v-spacer />
       <div class="d-flex justify-center align-center w-25">
-        <v-text-field class="mx-4" flat hide-details solo-inverted clearable v-model="state.searchInput"
-          @keydown="onSearch" @click:clear="onSearch" :label="$t('searchBox')" prepend-inner-icon="mdi-magnify" />
+        <v-text-field class="mx-4" flat hide-details solo-inverted clearable prepend-inner-icon="mdi-magnify"
+          v-model="state.searchInput" @keydown="onSearch" @click:clear="onSearch" :label="$t('searchBox')" />
 
-        <v-select prepend-inner-icon="mdi-earth" :label="$t('languages.label')" v-model="$i18n.locale"
-          :items="languages" item-value="value" item-title="displaytext" class="mt-5">
-        </v-select>
+        <v-select prepend-inner-icon="mdi-earth" item-value="value" item-title="displaytext" class="mt-5"
+          v-model="$i18n.locale" :items="languages" :label="$t('languages.label')" />
       </div>
       <template #extension>
         <v-tabs center class="w-100">

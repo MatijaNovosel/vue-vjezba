@@ -35,7 +35,7 @@ export default {
   },
   dialogAnswers: {
     yes: "Yes",
-    no: "No"
+    no: "No",
   },
   languages: {
     english: "English",

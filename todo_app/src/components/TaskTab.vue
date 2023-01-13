@@ -5,12 +5,12 @@
 </template>
 
 <script lang="ts" setup>
-import TaskCard from "./TaskCard.vue";
-import { storeToRefs } from "pinia";
 import { useTodoStore } from '@/store/todos';
+import { storeToRefs } from "pinia";
+import TaskCard from "./TaskCard.vue";
 
 const store = useTodoStore()
 
-const {  showTodoItems } = storeToRefs(store);
+const { showTodoItems } = storeToRefs(store);
 
 </script>
