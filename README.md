@@ -40,7 +40,18 @@ Stavka bi trebala izgledati nalik ovome (pogledati ostale Vuetify komponente koj
 - Stavke je potrebno dodati uz pomoć [dijaloga](https://vuetifyjs.com/en/components/dialogs/) i potrebno je napraviti validaciju sadržaja koristeći [vee-validate](https://vee-validate.logaretm.com/v4/)
 - Isti taj dijalog koristiti za uređivanje stavki (razmisliti o tome gdje držati podatke o odabranoj stavci)
 - Dodati prijevod na aplikaciju uz pomoć [i18n](https://kazupon.github.io/vue-i18n/), za engleski i hrvatski jezik te klikom na gumb prebaciti iz jednog u drugo ili obratno
-- Napraviti gumb koji će obrisati sve stavke i u staviti ih u arhivu, a nalazi se samo na viewu gdje su ili aktivne ili neaktivne stavke, tu akciju treba potvrditi posebnim dijalogom gdje su jedine opcije `Yes` ili `No`
+- Napraviti gumb koji će obrisati sve stavke i u staviti ih u arhivu, a nalazi se samo na viewu gdje su ili aktivne ili neaktivne stavke, tu akciju treba potvrditi posebnim dijalogom gdje su jedine opcije `Yes` ili `No`. Po mogućnosti dijalog bi trebao imati mogućnost pozvati se programski, npr.
+
+```typescript
+const answer = await createConfirmDialog("Are you sure?", {
+  width: 400,
+  persistent: true
+});
+if (answer) {
+  console.log("You pressed yes!");
+}
+```
+
 - Napraviti rutu unutar koje će se prikazati arhiva stavki, klikom na gumb na toj stavci na tom ekranu vratiti će se u svoje pripadno stanje van iz arhive
 - Većinu logike s operacijama nad stavkama bi trebala biti obavljena unutar stora
 - Stavke u arhivi i u neaktivnom stanju je nemoguće uređivati, samo one koje su aktivne
