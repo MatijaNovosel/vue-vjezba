@@ -11,17 +11,17 @@
         <v-row>
           <v-col cols="12">
             <v-card
-              v-for="(task, index) in tasksStore.doneTasks"
+              v-for="(task, index) in tasksStore.tasksDone"
               :key="index"
               outlined
               class="my-3"
             >
-              <v-card-title :class="{ 'line-through': true }">{{
-                task.title
-              }}</v-card-title>
-              <v-card-text :class="{ 'line-through': true }">{{
-                task.description
-              }}</v-card-text>
+              <v-card-title :class="{ 'line-through': true }">
+                {{ task.title }}
+              </v-card-title>
+              <v-card-text :class="{ 'line-through': true }">
+                {{ task.description }}
+              </v-card-text>
               <v-card-text>{{ task.createdAt }}</v-card-text>
             </v-card>
           </v-col>
@@ -30,7 +30,6 @@
     </v-card>
     <div>
       <v-btn @click="showModal">{{ $t("deleteAll") }}</v-btn>
-
       <confirmModal
         v-model="modalConfirm"
         title="$t('confirm')"

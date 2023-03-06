@@ -1,21 +1,23 @@
-import 'vuetify/styles';
-import { createVuetify } from 'vuetify';
-import * as components from 'vuetify/components';
-import * as directives from 'vuetify/directives';
-import '@mdi/font/css/materialdesignicons.css';
+import "@mdi/font/css/materialdesignicons.css";
+import { Field, Form } from "vee-validate";
+import { createVuetify } from "vuetify";
+import * as components from "vuetify/components";
+import * as directives from "vuetify/directives";
+import "vuetify/styles";
 import i18n from "./i18n";
 
-import { createPinia } from 'pinia';
+import { createPinia } from "pinia";
 
-import { createApp } from 'vue';
-import App from './App.vue';
-import router from './router';
+import { createApp } from "vue";
+import App from "./App.vue";
+import router from "./router";
+import "./validators";
 
 const pinia = createPinia();
 
 const vuetify = createVuetify({
   components,
-  directives,
+  directives
 });
 
 createApp(App)
@@ -23,5 +25,6 @@ createApp(App)
   .use(i18n)
   .use(vuetify)
   .use(pinia)
-  .mount('#app');
-
+  .component("vv-field", Field)
+  .component("vv-form", Form)
+  .mount("#app");

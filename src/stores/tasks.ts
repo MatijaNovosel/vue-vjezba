@@ -112,13 +112,16 @@ export const useTasksStore = defineStore({
       );
       this.tasks = filteredTasks;
       localStorage.setItem("tasks", JSON.stringify(this.tasks));
+    },
+    closeEditModal() {
+      this.editModal = false;
     }
   },
   getters: {
     notDoneTasks(state) {
       return state.tasks.filter((task) => !task.done);
     },
-    doneTasks(state) {
+    tasksDone(state) {
       return state.doneTasks;
     },
     currentLanguage(state): string {
