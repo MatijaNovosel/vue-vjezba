@@ -11,7 +11,7 @@
         <v-row>
           <v-col cols="12">
             <v-card
-              v-for="(task, index) in tasksStore.tasksDone"
+              v-for="(task, index) in tasksStore.tasksDone()"
               :key="index"
               outlined
               class="my-3"
@@ -35,7 +35,7 @@
         title="$t('confirm')"
         confirm-button-label="$t('deleteAll')"
         cancel-button-label="$t('cancel')"
-        @confirm="tasksStore.archiveAll()"
+        @confirm="tasksStore.archiveAllDone()"
         @cancel="modalConfirm = false"
       >
         {{ $t("deleteMessage") }}
@@ -51,7 +51,7 @@ import { useTasksStore } from "../stores/tasks";
 
 let modalConfirm = ref(false);
 
-const tasksStore = useTasksStore();
+const tasksStore = ref(useTasksStore());
 const langs = ["en", "hr"];
 
 const showModal = () => {
