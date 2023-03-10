@@ -21,10 +21,10 @@ const vuetify = createVuetify({
 });
 
 createApp(App)
+  .use(pinia)
   .use(router)
   .use(i18n)
   .use(vuetify)
-  .use(pinia)
   .component("vv-field", Field)
   .component("vv-form", Form)
   .mount("#app");

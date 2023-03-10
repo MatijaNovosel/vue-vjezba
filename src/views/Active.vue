@@ -18,7 +18,7 @@
         <v-row>
           <v-col cols="12">
             <v-card
-              v-for="(task, index) in tasksStore.tasks"
+              v-for="(task, index) in tasksStore.notDoneTasks()"
               :key="index"
               outlined
               class="my-3"
@@ -27,13 +27,13 @@
               <v-card-text>{{ task.description }}</v-card-text>
               <v-card-text>{{ task.createdAt }}</v-card-text>
               <v-card-actions>
-                <v-btn @click="tasksStore.markAsDone(index)">{{
+                <v-btn @click="tasksStore.markAsDone(task)">{{
                   $t("markAsDone")
                 }}</v-btn>
-                <v-btn @click="tasksStore.editTask(index)">{{
+                <v-btn @click="tasksStore.editTask(task)">{{
                   $t("editTask")
                 }}</v-btn>
-                <v-btn @click="tasksStore.deleteTask(index)">{{
+                <v-btn @click="tasksStore.deleteTask(task)">{{
                   $t("deleteTask")
                 }}</v-btn>
               </v-card-actions>
@@ -54,7 +54,7 @@
                 v-slot="{ field, errors }"
               >
                 <v-text-field
-                  v-model="title"
+                  v-model="tasksStore.editedTask.title"
                   v-bind="field"
                   :label="$t('title')"
                   :error-messages="errors"
@@ -82,7 +82,7 @@
               <v-btn type="submit">
                 {{ $t("saveTask") }}
               </v-btn>
-              <v-btn @click="tasksStore.closeEditModal">
+              <v-btn @click="tasksStore.closeEditModal()">
                 {{ $t("cancel") }}
               </v-btn>
             </v-card-actions>
@@ -97,7 +97,7 @@
         title="$t('confirm')"
         confirm-button-label="$t('deleteAll')"
         cancel-button-label="$t('cancel')"
-        @confirm="tasksStore.archiveAll()"
+        @confirm="tasksStore.archiveAllActive()"
         @cancel="modalConfirm = false"
       >
         {{ $t("deleteMessage") }}
@@ -111,11 +111,10 @@ import { storeToRefs } from "pinia";
 import { ref } from "vue";
 import confirmModal from "../components/ConfirmModal.vue";
 import { useTasksStore } from "../stores/tasks";
+var tasksStore = useTasksStore();
 
-let modalConfirm = ref(false);
-
-const tasksStore = useTasksStore();
 const langs = ["en", "hr"];
+const modalConfirm = ref(false);
 
 const showModal = () => {
   modalConfirm.value = !modalConfirm.value;

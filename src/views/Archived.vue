@@ -12,7 +12,7 @@
         <v-row>
           <v-col cols="12">
             <v-card
-              v-for="(task, index) in store.deleted"
+              v-for="(task, index) in store.deletedTasks()"
               :key="index"
               outlined
               class="my-3"
@@ -27,7 +27,7 @@
                 {{ task.createdAt }}
               </v-card-text>
               <v-card-actions>
-                <v-btn color="primary" @click="store.restoreTask(index)">
+                <v-btn color="primary" @click="store.restoreTask(task)">
                   <v-icon>mdi-restore</v-icon>
                 </v-btn>
               </v-card-actions>
@@ -42,5 +42,5 @@
 <script lang="ts" setup>
 import { useTasksStore } from "@/stores/tasks";
 const store = useTasksStore();
-console.log(store.deleted);
+console.log(store.tasks);
 </script>
