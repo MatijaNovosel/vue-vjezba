@@ -1,4 +1,11 @@
 <template>
+  <v-text-field
+    v-model="searchText"
+    placeholder="Search"
+    hide-details
+    prepend-inner-icon="mdi-magnify"
+    @input="searchTasks"
+  ></v-text-field>
   <v-container fluid>
     <v-card class="mx-auto" max-width="1200">
       <v-toolbar dense>
@@ -18,7 +25,7 @@
         <v-row>
           <v-col cols="12">
             <v-card
-              v-for="(task, index) in tasksStore.notDoneTasks()"
+              v-for="(task, index) in taskModel"
               :key="index"
               outlined
               class="my-3"
@@ -107,20 +114,25 @@
 </template>
 
 <script lang="ts" setup>
+import { debounce } from "lodash";
 import { storeToRefs } from "pinia";
 import { ref } from "vue";
 import confirmModal from "../components/ConfirmModal.vue";
 import { useTasksStore } from "../stores/tasks";
 var tasksStore = useTasksStore();
+let taskModel = ref(tasksStore.notDoneTasks);
 
 const langs = ["en", "hr"];
 const modalConfirm = ref(false);
+let searchText = "";
 
 const showModal = () => {
   modalConfirm.value = !modalConfirm.value;
 };
 
-const title = ref("");
+const searchTasks = debounce(() => {
+  taskModel = ref(tasksStore.filterNotDoneTasks(searchText.trim()));
+}, 500);
 
 const { editModal, editedTask } = storeToRefs(tasksStore);
 </script>

@@ -8,7 +8,7 @@ export interface Task {
 
 export interface TasksState {
   tasks: Task[];
-
+  searchTerm: string;
   editModal: boolean;
   editedTask: Task;
   editedTaskIndex: number;

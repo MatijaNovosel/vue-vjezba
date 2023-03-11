@@ -1,4 +1,11 @@
 <template>
+  <v-text-field
+    v-model="searchText"
+    placeholder="Search"
+    hide-details
+    prepend-inner-icon="mdi-magnify"
+    @input="searchTasks"
+  ></v-text-field>
   <v-container fluid>
     <v-card class="mx-auto" max-width="1200">
       <v-toolbar dense>
@@ -11,7 +18,7 @@
         <v-row>
           <v-col cols="12">
             <v-card
-              v-for="(task, index) in tasksStore.tasksDone()"
+              v-for="(task, index) in taskModel"
               :key="index"
               outlined
               class="my-3"
@@ -45,6 +52,7 @@
 </template>
 
 <script lang="ts" setup>
+import { debounce } from "lodash";
 import { ref } from "vue";
 import confirmModal from "../components/ConfirmModal.vue";
 import { useTasksStore } from "../stores/tasks";
@@ -53,6 +61,23 @@ let modalConfirm = ref(false);
 
 const tasksStore = ref(useTasksStore());
 const langs = ["en", "hr"];
+
+let taskModel = ref(tasksStore.value.doneTasks);
+let searchText = ref("");
+
+const searchTasks = debounce(() => {
+  if (searchText.value.trim() === "") {
+    taskModel.value = tasksStore.value.doneTasks;
+    console.log("taskModel", taskModel);
+
+    return;
+  }
+  taskModel.value = tasksStore.value.filterInactiveTasks(
+    searchText.value.trim()
+  );
+  console.log("taskModel filtriran", taskModel);
+  console.log("SEARCH PARAM", searchText.value.trim());
+}, 1000);
 
 const showModal = () => {
   modalConfirm.value = !modalConfirm.value;

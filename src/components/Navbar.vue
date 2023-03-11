@@ -1,6 +1,6 @@
 <template>
-  <v-app>
-    <v-navigation-drawer v-model="drawer" app>
+  <div>
+    <v-navigation-drawer v-model="drawer">
       <v-list dense>
         <v-list-item
           v-for="(item, i) in items"
@@ -18,27 +18,15 @@
         </v-list-item>
       </v-list>
     </v-navigation-drawer>
-    <v-app-bar color="blue" app>
+    <v-app-bar color="blue">
       <v-app-bar-nav-icon @click="drawer = !drawer"></v-app-bar-nav-icon>
       <v-toolbar-title>{{ title }}</v-toolbar-title>
       <v-spacer></v-spacer>
-      <v-text-field
-        v-model="searchText"
-        placeholder="Search"
-        hide-details
-        prepend-inner-icon="mdi-magnify"
-        @input="onInput"
-      />
     </v-app-bar>
-    <v-main>
-      <router-view :filteredResults="filteredResults" />
-    </v-main>
-  </v-app>
+  </div>
 </template>
 
 <script lang="ts">
-import { useTasksStore } from "@/stores/tasks";
-import { debounce } from "lodash";
 import { useRouter } from "vue-router";
 
 export default {
@@ -56,7 +44,6 @@ export default {
   },
   setup() {
     const router = useRouter();
-    const store = useTasksStore();
 
     const goToRoute = (route: string) => {
       router.push(route);
@@ -64,21 +51,7 @@ export default {
 
     let filteredResults;
 
-    const debouncedFilterTasks = debounce(
-      (searchText: string, route: string) => {
-        filteredResults = store.filterTasks(searchText, route);
-        console.log(filteredResults);
-      },
-      500
-    );
-
-    const onInput = (event: InputEvent) => {
-      const target = event.target as HTMLInputElement;
-      const route = router.currentRoute.value.path;
-      debouncedFilterTasks(target.value, route);
-    };
-
-    return { goToRoute, onInput, filteredResults };
+    return { goToRoute };
   }
 };
 </script>

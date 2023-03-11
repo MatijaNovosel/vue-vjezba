@@ -9,7 +9,7 @@ export const useTasksStore = defineStore({
   id: "tasks",
   state: (): TasksState => ({
     tasks: JSON.parse(localStorage.getItem("tasks") || "[]"),
-
+    searchTerm: "",
     editModal: false,
     editedTask: {
       title: "",
@@ -93,47 +93,58 @@ export const useTasksStore = defineStore({
       }
       updateTaskListData.call(this);
     },
-    filterTasks(query: string, route: string): Task[] {
-      let filteredTasks: Task[] = [];
-      if (route === "/active") {
-        filteredTasks = this.tasks.filter(
-          (task) =>
-            !task.done &&
-            !task.deleted &&
-            task.title.toLowerCase().includes(query.toLowerCase())
-        );
-      } else if (route === "/inactive") {
-        filteredTasks = this.tasks.filter(
-          (task) =>
-            task.done &&
-            !task.deleted &&
-            task.title.toLowerCase().includes(query.toLowerCase())
-        );
-      } else if (route == "/archived") {
-        filteredTasks = this.tasks.filter(
-          (task) =>
-            task.deleted &&
-            !task.done &&
-            task.title.toLowerCase().includes(query.toLowerCase())
-        );
+    filterNotDoneTasks(searchTerm: string): Task[] {
+      if (searchTerm == "") {
+        return this.notDoneTasks;
       }
-      return filteredTasks;
+      return this.tasks.filter(
+        (task) =>
+          task.title.toLowerCase().includes(searchTerm.toLowerCase()) &&
+          !task.deleted &&
+          !task.done
+      );
+    },
+    filterDeletedTasks(searchTerm: string): Task[] {
+      if (!searchTerm) {
+        return this.deletedTasks;
+      }
+      return this.tasks.filter(
+        (task) =>
+          task.title.toLowerCase().includes(searchTerm.toLowerCase()) &&
+          task.deleted &&
+          !task.done
+      );
+    },
+    filterInactiveTasks(searchTerm: string): Task[] {
+      if (!searchTerm) {
+        return this.doneTasks;
+      }
+      return this.tasks.filter(
+        (task) =>
+          task.title.toLowerCase().includes(searchTerm.toLowerCase()) &&
+          !task.deleted &&
+          task.done
+      );
     },
     closeEditModal() {
       this.editModal = false;
     },
-    notDoneTasks() {
-      return this.tasks.filter((task) => !task.done && !task.deleted);
-    },
-    tasksDone() {
-      return this.tasks.filter((task) => task.done && !task.deleted);
-    },
+
     currentLanguage() {
       return this.lang;
-    },
-    deletedTasks() {
-      return this.tasks.filter((task) => task.deleted);
     }
   },
-  getters: {}
+  getters: {
+    notDoneTasks(): Task[] {
+      const filtered = this.tasks.filter((task) => !task.done && !task.deleted);
+      console.log("filtriran", filtered);
+      return filtered;
+    },
+    deletedTasks(): Task[] {
+      return this.tasks.filter((task) => task.deleted);
+    },
+    doneTasks(): Task[] {
+      return this.tasks.filter((task) => task.done && !task.deleted);
+    }
+  }
 });
