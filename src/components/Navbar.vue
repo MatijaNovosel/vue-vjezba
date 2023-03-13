@@ -2,19 +2,13 @@
   <div>
     <v-navigation-drawer v-model="drawer">
       <v-list dense>
-        <v-list-item
-          v-for="(item, i) in items"
-          :key="i"
-          @click="goToRoute(item.route)"
-        >
-          <v-list-item-icon>
+        <v-list-item v-for="(item, i) in items" :key="i" :to="item.route">
+          <template #prepend>
             <v-icon>{{ item.icon }}</v-icon>
-          </v-list-item-icon>
-          <v-list-item-content>
-            <v-list-item-title>
-              {{ item.title }}
-            </v-list-item-title>
-          </v-list-item-content>
+          </template>
+          <v-list-item-title>
+            {{ item.title }}
+          </v-list-item-title>
         </v-list-item>
       </v-list>
     </v-navigation-drawer>
@@ -27,8 +21,6 @@
 </template>
 
 <script lang="ts">
-import { useRouter } from "vue-router";
-
 export default {
   data() {
     return {
@@ -43,15 +35,7 @@ export default {
     };
   },
   setup() {
-    const router = useRouter();
-
-    const goToRoute = (route: string) => {
-      router.push(route);
-    };
-
-    let filteredResults;
-
-    return { goToRoute };
+    return {};
   }
 };
 </script>

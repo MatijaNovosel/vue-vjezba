@@ -1,4 +1,5 @@
 export interface Task {
+  id: number;
   title: string;
   description: string;
   createdAt: string;
@@ -6,11 +7,16 @@ export interface Task {
   deleted: boolean;
 }
 
+export interface NewTask {
+  title: string;
+  description: string;
+}
+
 export interface TasksState {
   tasks: Task[];
   searchTerm: string;
   editModal: boolean;
-  editedTask: Task;
-  editedTaskIndex: number;
   lang: string;
+  newTask: NewTask;
+  newTaskId: number;
 }

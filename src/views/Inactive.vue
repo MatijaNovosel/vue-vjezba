@@ -55,12 +55,12 @@
 import { debounce } from "lodash";
 import { ref } from "vue";
 import confirmModal from "../components/ConfirmModal.vue";
+import LocaleSwitcher from "../components/LocaleSwitcher.vue";
 import { useTasksStore } from "../stores/tasks";
 
 let modalConfirm = ref(false);
 
 const tasksStore = ref(useTasksStore());
-const langs = ["en", "hr"];
 
 let taskModel = ref(tasksStore.value.doneTasks);
 let searchText = ref("");

@@ -1,150 +1,171 @@
+import { randInt } from "@/utils/helpers";
 import { defineStore } from "pinia";
-import { Task, TasksState } from "./../interfaces/Interfaces";
+import { computed, reactive } from "vue";
+import { Task, TasksState } from "../interfaces/Interfaces";
 
-function updateTaskListData(this: TasksState): void {
-  localStorage.setItem("tasks", JSON.stringify(this.tasks));
-}
-
-export const useTasksStore = defineStore({
-  id: "tasks",
-  state: (): TasksState => ({
+export const useTasksStore = defineStore("tasks", () => {
+  const state: TasksState = reactive({
     tasks: JSON.parse(localStorage.getItem("tasks") || "[]"),
     searchTerm: "",
     editModal: false,
-    editedTask: {
-      title: "",
+    newTaskId: -1,
+    newTask: {
       description: "",
-      createdAt: "",
-      done: false,
-      deleted: false
+      title: ""
     },
-    editedTaskIndex: -1,
     lang: "en"
-  }),
-  actions: {
-    addTask() {
-      this.editModal = true;
-      const now = new Date().toISOString();
-      const task = {
-        title: "",
-        description: "",
-        createdAt: now,
-        done: false,
-        deleted: false
-      };
-      this.tasks.push(task);
-      this.editTask(task);
-      updateTaskListData.call(this);
-    },
+  });
 
-    editTask(task: Task) {
-      this.editedTask = task;
-      this.editedTaskIndex = this.tasks.indexOf(task);
-      this.editModal = true;
-      updateTaskListData.call(this);
-    },
-    saveTask() {
-      if (this.editedTaskIndex === -1) {
-        this.tasks.push(this.editedTask);
-      } else {
-        this.tasks.splice(this.editedTaskIndex, 1, this.editedTask);
-      }
-      this.editModal = false;
-      this.editedTask = {
-        title: "",
-        description: "",
-        createdAt: "",
-        done: false,
-        deleted: false
-      };
-      this.editedTaskIndex = -1;
-      updateTaskListData.call(this);
-    },
-    deleteTask(task: Task) {
-      task.deleted = true;
-      updateTaskListData.call(this);
-    },
-    markAsDone(task: Task) {
-      task.done = true;
-      updateTaskListData.call(this);
-    },
-    restoreTask(task: Task) {
-      task.deleted = false;
-      updateTaskListData.call(this);
-    },
-    changeLanguage(lang: string) {
-      if (this.lang !== lang) {
-        this.lang = lang;
-      }
-    },
-    archiveAllActive() {
-      if (this.tasks.length > 0) {
-        this.tasks.forEach((task) => {
-          if (task.done == false) task.deleted = true;
-        });
-      }
-      updateTaskListData.call(this);
-    },
-    archiveAllDone(): void {
-      if (this.tasks.length > 0) {
-        this.tasks.forEach((task) => {
-          if (task.done == true) task.deleted = true;
-        });
-      }
-      updateTaskListData.call(this);
-    },
-    filterNotDoneTasks(searchTerm: string): Task[] {
-      if (searchTerm == "") {
-        return this.notDoneTasks;
-      }
-      return this.tasks.filter(
-        (task) =>
-          task.title.toLowerCase().includes(searchTerm.toLowerCase()) &&
-          !task.deleted &&
-          !task.done
-      );
-    },
-    filterDeletedTasks(searchTerm: string): Task[] {
-      if (!searchTerm) {
-        return this.deletedTasks;
-      }
-      return this.tasks.filter(
-        (task) =>
-          task.title.toLowerCase().includes(searchTerm.toLowerCase()) &&
-          task.deleted &&
-          !task.done
-      );
-    },
-    filterInactiveTasks(searchTerm: string): Task[] {
-      if (!searchTerm) {
-        return this.doneTasks;
-      }
-      return this.tasks.filter(
-        (task) =>
-          task.title.toLowerCase().includes(searchTerm.toLowerCase()) &&
-          !task.deleted &&
-          task.done
-      );
-    },
-    closeEditModal() {
-      this.editModal = false;
-    },
+  const updateTaskListData = () => {
+    localStorage.setItem("tasks", JSON.stringify(state.tasks));
+  };
 
-    currentLanguage() {
-      return this.lang;
+  const openTaskDialog = (task?: Task) => {
+    if (task !== undefined) {
+      state.newTask = {
+        title: task.title,
+        description: task.description
+      };
+      state.newTaskId = task.id;
     }
-  },
-  getters: {
-    notDoneTasks(): Task[] {
-      const filtered = this.tasks.filter((task) => !task.done && !task.deleted);
-      console.log("filtriran", filtered);
-      return filtered;
-    },
-    deletedTasks(): Task[] {
-      return this.tasks.filter((task) => task.deleted);
-    },
-    doneTasks(): Task[] {
-      return this.tasks.filter((task) => task.done && !task.deleted);
+    state.editModal = true;
+  };
+
+  const confirmChanges = () => {
+    if (state.newTaskId === -1) {
+      state.tasks.push({
+        createdAt: new Date().toISOString(),
+        deleted: false,
+        description: state.newTask.description,
+        title: state.newTask.title,
+        id: randInt(1, 9999),
+        done: false
+      });
+    } else {
+      const idx = state.tasks.findIndex((t) => t.id === state.newTaskId);
+      state.tasks[idx].title = state.newTask.title;
+      state.tasks[idx].description = state.newTask.description;
     }
-  }
+    closeEditModal();
+    updateTaskListData();
+  };
+
+  const deleteTask = (task: Task) => {
+    task.deleted = true;
+    updateTaskListData();
+  };
+
+  const markAsDone = (task: Task) => {
+    task.done = true;
+    updateTaskListData();
+  };
+
+  const restoreTask = (task: Task) => {
+    task.deleted = false;
+    updateTaskListData();
+  };
+
+  const changeLanguage = (lang: string) => {
+    if (state.lang !== lang) {
+      state.lang = lang;
+    }
+  };
+
+  const archiveAllActive = () => {
+    state.tasks.forEach((task) => {
+      if (task.done == false) task.deleted = true;
+    });
+    updateTaskListData();
+  };
+
+  const archiveAllDone = () => {
+    state.tasks.forEach((task) => {
+      if (task.done == true) task.deleted = true;
+    });
+    updateTaskListData();
+  };
+
+  const filterNotDoneTasks = (searchTerm: string): Task[] => {
+    return state.tasks.filter(
+      (task) =>
+        task.title.toLowerCase().includes(searchTerm.toLowerCase()) &&
+        !task.deleted &&
+        !task.done
+    );
+  };
+
+  const filterDeletedTasks = (searchTerm: string): Task[] => {
+    return state.tasks.filter(
+      (task) =>
+        task.title.toLowerCase().includes(searchTerm.toLowerCase()) &&
+        task.deleted &&
+        !task.done
+    );
+  };
+
+  const filterInactiveTasks = (searchTerm: string): Task[] => {
+    return state.tasks.filter(
+      (task) =>
+        task.title.toLowerCase().includes(searchTerm.toLowerCase()) &&
+        !task.deleted &&
+        task.done
+    );
+  };
+
+  const closeEditModal = () => {
+    state.editModal = false;
+    state.newTaskId = -1;
+    state.newTask = {
+      description: "",
+      title: ""
+    };
+  };
+
+  const currentLanguage = () => {
+    return state.lang;
+  };
+
+  const notDoneTasks = computed(() => {
+    const filtered = state.tasks.filter((task) => !task.done && !task.deleted);
+    console.log("filtriran", filtered);
+    return filtered;
+  });
+
+  const deletedTasks = computed(() => {
+    return state.tasks.filter((task) => task.deleted);
+  });
+
+  const doneTasks = computed(() => {
+    return state.tasks.filter((task) => task.done && !task.deleted);
+  });
+
+  const activeTasks = computed(() => {
+    return state.tasks.filter(
+      (task) =>
+        task.title.toLowerCase().includes(state.searchTerm.toLowerCase()) &&
+        !task.deleted &&
+        !task.done
+    );
+  });
+
+  return {
+    activeTasks,
+    archiveAllActive,
+    archiveAllDone,
+    changeLanguage,
+    closeEditModal,
+    doneTasks,
+    currentLanguage,
+    confirmChanges,
+    notDoneTasks,
+    filterInactiveTasks,
+    deletedTasks,
+    filterDeletedTasks,
+    restoreTask,
+    filterNotDoneTasks,
+    state,
+    markAsDone,
+    openTaskDialog,
+    deleteTask
+  };
 });
