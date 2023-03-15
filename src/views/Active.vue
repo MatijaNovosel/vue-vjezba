@@ -1,54 +1,49 @@
 <template>
-  <v-text-field
-    v-model="searchText"
-    placeholder="Search"
-    hide-details
-    prepend-inner-icon="mdi-magnify"
-  ></v-text-field>
   <v-container fluid>
     <v-card class="mx-auto" max-width="1200">
       <v-toolbar dense>
         <v-toolbar-title>{{ $t("taskList") }}</v-toolbar-title>
-        <v-spacer></v-spacer>
-        <div>
-          <select v-model="$i18n.locale">
-            <option v-for="(lang, i) in langs" :key="`lang-${i}`" :value="lang">
-              {{ lang }}
-            </option>
-          </select>
-        </div>
+        <v-spacer />
         <v-btn @click="tasksStore.openTaskDialog()">{{ $t("addTask") }}</v-btn>
       </v-toolbar>
-      <v-divider></v-divider>
+      <v-divider />
       <v-container>
         <v-row>
+          <v-spacer />
+          <v-btn
+            right
+            v-if="tasksStore.notDoneTasks.length > 0"
+            @click="tasksStore.showConfirmModal"
+            >{{ $t("deleteAll") }}
+          </v-btn>
           <v-col cols="12">
-            <span v-if="!tasksStore.activeTasks.length">
-              Nije pronađen ni jedan task.
-            </span>
-            <template v-else>
-              <v-card
-                v-for="(task, index) in tasksStore.activeTasks"
-                :key="index"
-                outlined
-                class="my-3"
-              >
-                <v-card-title>{{ task.title }}</v-card-title>
-                <v-card-text>{{ task.description }}</v-card-text>
-                <v-card-text>{{ task.createdAt }}</v-card-text>
+            <task-list :tasks="tasksStore.filterTasks(tasksStore.notDoneTasks)">
+              <template v-slot:task="{ task }">
+                <v-card-title>{{ (task as Task).title }}</v-card-title>
+                <v-card-text>{{ (task as Task).description }}</v-card-text>
+                <v-card-text>{{
+                  new Date((task as Task).createdAt).toLocaleDateString(
+                    "hr-HR",
+                    {
+                      day: "2-digit",
+                      month: "2-digit",
+                      year: "numeric"
+                    }
+                  )
+                }}</v-card-text>
                 <v-card-actions>
-                  <v-btn @click="tasksStore.markAsDone(task)">{{
+                  <v-btn @click="tasksStore.markAsDone(task as Task)">{{
                     $t("markAsDone")
                   }}</v-btn>
-                  <v-btn @click="tasksStore.openTaskDialog(task)">{{
+                  <v-btn @click="tasksStore.openTaskDialog(task as Task)">{{
                     $t("editTask")
                   }}</v-btn>
-                  <v-btn @click="tasksStore.deleteTask(task)">{{
+                  <v-btn @click="tasksStore.deleteTask(task as Task)">{{
                     $t("deleteTask")
                   }}</v-btn>
                 </v-card-actions>
-              </v-card>
-            </template>
+              </template>
+            </task-list>
           </v-col>
         </v-row>
       </v-container>
@@ -102,34 +97,20 @@
         </v-card>
       </v-dialog>
     </v-card>
-    <div>
-      <v-btn @click="showModal">{{ $t("deleteAll") }}</v-btn>
-      <confirm-modal
-        v-model="modalConfirm"
-        title="$t('confirm')"
-        confirm-button-label="$t('deleteAll')"
-        cancel-button-label="$t('cancel')"
-        @confirm="tasksStore.archiveAllActive()"
-        @cancel="modalConfirm = false"
-      >
-        {{ $t("deleteMessage") }}
-      </confirm-modal>
-    </div>
+
+    <confirm-modal
+      v-model="tasksStore.state.confirmModal"
+      :on-confirm="() => tasksStore.archiveAll(tasksStore.notDoneTasks)"
+      :on-cancel="tasksStore.hideConfirmDialog"
+    />
   </v-container>
 </template>
 
 <script lang="ts" setup>
-import { ref } from "vue";
+import TaskList from "@/components/TaskList.vue";
 import confirmModal from "../components/ConfirmModal.vue";
+import { Task } from "../models/Interfaces";
 import { useTasksStore } from "../stores/tasks";
-import { langs } from "../utils/constants";
 
 const tasksStore = useTasksStore();
-
-const modalConfirm = ref(false);
-let searchText = "";
-
-const showModal = () => {
-  modalConfirm.value = !modalConfirm.value;
-};
 </script>

@@ -4,7 +4,7 @@ export interface Task {
   description: string;
   createdAt: string;
   done: boolean;
-  deleted: boolean;
+  deleted?: boolean;
 }
 
 export interface NewTask {
@@ -16,6 +16,7 @@ export interface TasksState {
   tasks: Task[];
   searchTerm: string;
   editModal: boolean;
+  confirmModal: boolean;
   lang: string;
   newTask: NewTask;
   newTaskId: number;

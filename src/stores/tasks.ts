@@ -1,13 +1,15 @@
 import { randInt } from "@/utils/helpers";
 import { defineStore } from "pinia";
 import { computed, reactive } from "vue";
-import { Task, TasksState } from "../interfaces/Interfaces";
+import { TasksState } from "../models/Interfaces";
+import { Task } from "./../models/Interfaces";
 
 export const useTasksStore = defineStore("tasks", () => {
   const state: TasksState = reactive({
     tasks: JSON.parse(localStorage.getItem("tasks") || "[]"),
     searchTerm: "",
     editModal: false,
+    confirmModal: false,
     newTaskId: -1,
     newTask: {
       description: "",
@@ -71,45 +73,27 @@ export const useTasksStore = defineStore("tasks", () => {
     }
   };
 
-  const archiveAllActive = () => {
-    state.tasks.forEach((task) => {
-      if (task.done == false) task.deleted = true;
-    });
+  const hideConfirmDialog = () => {
+    state.confirmModal = false;
+    console.log("nemoj gazatvori ga");
+  };
+  const showConfirmModal = () => {
+    state.confirmModal = !state.confirmModal;
+  };
+  const archiveAll = (taskList: Task[]) => {
+    taskList.forEach((task) => (task.deleted = true));
     updateTaskListData();
+
+    hideConfirmDialog();
   };
 
-  const archiveAllDone = () => {
-    state.tasks.forEach((task) => {
-      if (task.done == true) task.deleted = true;
-    });
-    updateTaskListData();
-  };
-
-  const filterNotDoneTasks = (searchTerm: string): Task[] => {
-    return state.tasks.filter(
-      (task) =>
-        task.title.toLowerCase().includes(searchTerm.toLowerCase()) &&
-        !task.deleted &&
-        !task.done
+  const filterTasks = (tasks: Task[]): Task[] => {
+    return tasks.filter((task) =>
+      task.title.toLowerCase().includes(state.searchTerm.toLowerCase())
     );
   };
-
-  const filterDeletedTasks = (searchTerm: string): Task[] => {
-    return state.tasks.filter(
-      (task) =>
-        task.title.toLowerCase().includes(searchTerm.toLowerCase()) &&
-        task.deleted &&
-        !task.done
-    );
-  };
-
-  const filterInactiveTasks = (searchTerm: string): Task[] => {
-    return state.tasks.filter(
-      (task) =>
-        task.title.toLowerCase().includes(searchTerm.toLowerCase()) &&
-        !task.deleted &&
-        task.done
-    );
+  const setSearchTerm = (searchTerm: string) => {
+    state.searchTerm = searchTerm;
   };
 
   const closeEditModal = () => {
@@ -127,7 +111,6 @@ export const useTasksStore = defineStore("tasks", () => {
 
   const notDoneTasks = computed(() => {
     const filtered = state.tasks.filter((task) => !task.done && !task.deleted);
-    console.log("filtriran", filtered);
     return filtered;
   });
 
@@ -149,23 +132,23 @@ export const useTasksStore = defineStore("tasks", () => {
   });
 
   return {
+    setSearchTerm,
+    archiveAll,
+    hideConfirmDialog,
     activeTasks,
-    archiveAllActive,
-    archiveAllDone,
     changeLanguage,
     closeEditModal,
     doneTasks,
     currentLanguage,
     confirmChanges,
-    notDoneTasks,
-    filterInactiveTasks,
+    notDoneTasks: notDoneTasks,
     deletedTasks,
-    filterDeletedTasks,
     restoreTask,
-    filterNotDoneTasks,
+    filterTasks,
     state,
     markAsDone,
     openTaskDialog,
-    deleteTask
+    deleteTask,
+    showConfirmModal
   };
 });
