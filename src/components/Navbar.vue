@@ -39,9 +39,14 @@
 
 <script lang="ts" setup>
 import { useTasksStore } from "@/stores/tasks";
-import { debounce, drawer, items, searchText } from "../utils/constants";
-const tasksStore = useTasksStore();
+import { createDebounce } from "@/utils/helpers";
+import { ref } from "vue";
+import { items } from "../utils/constants";
 
+const drawer = ref(false);
+const searchText = ref("");
+const tasksStore = useTasksStore();
+const debounce = createDebounce();
 const searchTasks = () => {
   debounce(() => {
     tasksStore.setSearchTerm(searchText.value);

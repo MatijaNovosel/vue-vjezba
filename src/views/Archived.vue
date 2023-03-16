@@ -12,7 +12,11 @@
         <v-row>
           <v-spacer />
           <v-col cols="12">
-            <task-showing :tasks="tasksStore.deletedTasks" />
+            <task-card
+              v-for="task in tasksStore.deletedTasks"
+              :key="task.id"
+              :task="task"
+            />
           </v-col>
         </v-row>
       </v-container>
@@ -21,7 +25,7 @@
 </template>
 
 <script lang="ts" setup>
-import TaskShowing from "../components/TaskList.vue";
+import TaskCard from "../components/TaskCard.vue";
 import { useTasksStore } from "../stores/tasks";
 
 const tasksStore = useTasksStore();

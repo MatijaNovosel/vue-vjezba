@@ -1,12 +1,13 @@
 import { randInt } from "@/utils/helpers";
 import { defineStore } from "pinia";
 import { computed, reactive } from "vue";
-import { Task, TasksState } from "../models/Index";
+import { Task, TasksState } from "../models/index";
 
 export const useTasksStore = defineStore("tasks", () => {
   const state: TasksState = reactive({
     tasks: JSON.parse(localStorage.getItem("tasks") || "[]"),
     searchTerm: "",
+    confirmModal: false,
     editModal: false,
     newTaskId: -1,
     newTask: {

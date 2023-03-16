@@ -19,7 +19,11 @@
             {{ $t("deleteAll") }}
           </v-btn>
           <v-col cols="12">
-            <task-showing :tasks="tasksStore.doneTasks" />
+            <task-card
+              v-for="task in tasksStore.doneTasks"
+              :key="task.id"
+              :task="task"
+            />
           </v-col>
         </v-row>
       </v-container>
@@ -34,7 +38,7 @@
 
 <script lang="ts" setup>
 import confirmModal from "../components/ConfirmModal.vue";
-import TaskShowing from "../components/TaskList.vue";
+import TaskCard from "../components/TaskCard.vue";
 import { useTasksStore } from "../stores/tasks";
 
 const tasksStore = useTasksStore();
