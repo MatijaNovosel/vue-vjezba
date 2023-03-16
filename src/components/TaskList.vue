@@ -1,29 +1,66 @@
 <template>
-  <v-container>
-    <v-row>
-      <v-col cols="12">
-        <span v-if="!tasks.length">{{ $t("noTasksMessage") }}</span>
-        <template v-else>
-          <v-card
-            v-for="(task, index) in tasks"
-            :key="index"
-            outlined
-            class="my-3"
-          >
-            <slot name="task" :task="task"></slot>
-          </v-card>
-        </template>
-      </v-col>
-    </v-row>
-  </v-container>
+  <div>
+    <v-card
+      v-for="(task, index) in tasks"
+      :key="index"
+      style="margin-bottom: 16px"
+    >
+      <v-card-title>
+        {{ task.title }}
+      </v-card-title>
+      <v-card-text>
+        {{ task.description }}
+      </v-card-text>
+      <v-card-text>
+        {{
+          new Date(task.createdAt).toLocaleDateString("hr-HR", {
+            day: "2-digit",
+            month: "2-digit",
+            year: "numeric"
+          })
+        }}
+      </v-card-text>
+      <v-card-actions>
+        <v-btn
+          v-if="!task.done && !task.deleted"
+          @click="tasksStore.markAsDone(task)"
+        >
+          {{ $t("markAsDone") }}
+        </v-btn>
+        <v-btn
+          v-if="!task.deleted && !task.done"
+          @click="tasksStore.openTaskDialog(task)"
+        >
+          {{ $t("editTask") }}
+        </v-btn>
+        <v-btn
+          v-if="!task.deleted && !task.done"
+          @click="tasksStore.deleteTask(task)"
+        >
+          {{ $t("deleteTask") }}
+        </v-btn>
+        <v-btn
+          v-if="task.deleted"
+          color="primary"
+          @click="tasksStore.restoreTask(task)"
+        >
+          <v-icon>mdi-restore</v-icon>
+        </v-btn>
+      </v-card-actions>
+    </v-card>
+    <v-spacer />
+  </div>
 </template>
 
 <script lang="ts" setup>
+import { useTasksStore } from "@/stores/tasks";
 import { defineProps } from "vue";
+import { Task } from "../models/Index";
+const tasksStore = useTasksStore();
 
-const props = defineProps({
+defineProps({
   tasks: {
-    type: Array,
+    type: Array as () => Task[],
     default: () => []
   }
 });

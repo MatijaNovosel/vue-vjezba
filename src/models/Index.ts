@@ -16,7 +16,6 @@ export interface TasksState {
   tasks: Task[];
   searchTerm: string;
   editModal: boolean;
-  confirmModal: boolean;
   lang: string;
   newTask: NewTask;
   newTaskId: number;

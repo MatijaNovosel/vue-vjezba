@@ -1,15 +1,13 @@
 import { randInt } from "@/utils/helpers";
 import { defineStore } from "pinia";
 import { computed, reactive } from "vue";
-import { TasksState } from "../models/Interfaces";
-import { Task } from "./../models/Interfaces";
+import { Task, TasksState } from "../models/Index";
 
 export const useTasksStore = defineStore("tasks", () => {
   const state: TasksState = reactive({
     tasks: JSON.parse(localStorage.getItem("tasks") || "[]"),
     searchTerm: "",
     editModal: false,
-    confirmModal: false,
     newTaskId: -1,
     newTask: {
       description: "",
@@ -75,23 +73,23 @@ export const useTasksStore = defineStore("tasks", () => {
 
   const hideConfirmDialog = () => {
     state.confirmModal = false;
-    console.log("nemoj gazatvori ga");
   };
+
   const showConfirmModal = () => {
     state.confirmModal = !state.confirmModal;
   };
+
   const archiveAll = (taskList: Task[]) => {
     taskList.forEach((task) => (task.deleted = true));
     updateTaskListData();
-
     hideConfirmDialog();
   };
-
   const filterTasks = (tasks: Task[]): Task[] => {
     return tasks.filter((task) =>
       task.title.toLowerCase().includes(state.searchTerm.toLowerCase())
     );
   };
+
   const setSearchTerm = (searchTerm: string) => {
     state.searchTerm = searchTerm;
   };
@@ -108,11 +106,6 @@ export const useTasksStore = defineStore("tasks", () => {
   const currentLanguage = () => {
     return state.lang;
   };
-
-  const notDoneTasks = computed(() => {
-    const filtered = state.tasks.filter((task) => !task.done && !task.deleted);
-    return filtered;
-  });
 
   const deletedTasks = computed(() => {
     return state.tasks.filter((task) => task.deleted);
@@ -141,7 +134,6 @@ export const useTasksStore = defineStore("tasks", () => {
     doneTasks,
     currentLanguage,
     confirmChanges,
-    notDoneTasks: notDoneTasks,
     deletedTasks,
     restoreTask,
     filterTasks,
