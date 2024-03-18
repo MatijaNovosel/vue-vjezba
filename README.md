@@ -3,7 +3,7 @@
 </div>
 
 <h1 align=center>Vue vježba</h1>
-<p align=center>Vježba za Vue 2/3.</p>
+<p align=center>Vježba za Vue 3.</p>
 
 ## 📑 Opis
 
